@@ -1,6 +1,7 @@
 package com.shanebeestudios.bot.listeners;
 
 import com.shanebeestudios.bot.BotHandler;
+import com.shanebeestudios.bot.util.Logger;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -11,6 +12,18 @@ public class JoinListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        String ID = event.getGuild().getId();
+
+        // Prevent this bot being used on another guild!
+        if (!ID.equalsIgnoreCase(BotHandler.getINSTANCE().getServerID())) {
+            Logger.info("Attempting to use bot on guild: " + event.getGuild().getName());
+            TextChannel channel = event.getGuild().getDefaultChannel();
+            if (channel != null) {
+                channel.sendMessage("**You are not authorized to use this bot!!!**").queue();
+            }
+            return;
+        }
+
         Member member = event.getMember();
         TextChannel welcomeChannel = BotHandler.getINSTANCE().getWelcomeChannel(); // TEMP for testing
         TextChannel rulesChannel = BotHandler.getINSTANCE().getRulesChannel(); // TEMP for testing

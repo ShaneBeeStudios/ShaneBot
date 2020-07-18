@@ -1,5 +1,6 @@
 package com.shanebeestudios.bot.listeners;
 
+import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.command.Command;
 import com.shanebeestudios.bot.util.Logger;
 import com.shanebeestudios.bot.util.Util;
@@ -21,10 +22,19 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
+        String ID = event.getGuild().getId();
         String message = event.getMessage().getContentRaw();
         Member member = event.getMember();
 
         if (message.charAt(0) == '!') {
+            // Prevent this bot being used on another guild!
+            if (!ID.equalsIgnoreCase(BotHandler.getINSTANCE().getServerID())) {
+
+                Logger.info("Attempting to use bot on guild: " + event.getGuild().getName());
+                event.getChannel().sendMessage("**You are not authorized to use this bot!!!**").queue();
+                return;
+            }
+
             String fullCommand = message.substring(1);
             String[] splitCommand = fullCommand.split(" ");
             String command = splitCommand[0];
