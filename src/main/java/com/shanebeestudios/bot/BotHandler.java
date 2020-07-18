@@ -6,8 +6,10 @@ import com.shanebeestudios.bot.command.Mute;
 import com.shanebeestudios.bot.command.Purge;
 import com.shanebeestudios.bot.command.Test;
 import com.shanebeestudios.bot.command.UnMute;
+import com.shanebeestudios.bot.data.MuteData;
 import com.shanebeestudios.bot.listeners.CommandListener;
 import com.shanebeestudios.bot.listeners.JoinListener;
+import com.shanebeestudios.bot.task.MuteTimer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Role;
@@ -23,6 +25,7 @@ public class BotHandler {
     private static JDA bot;
     private final Map<String, Command> commands = new HashMap<>();
     private final String server, welcome_c, rules_c, bot_c, muted_r, admin_r;
+    private final MuteData muteData;
 
     // Channels
     private TextChannel WELCOME_CHANNEL;
@@ -51,6 +54,8 @@ public class BotHandler {
             e.printStackTrace();
         }
         registerCommands();
+        this.muteData = new MuteData();
+        new MuteTimer(this, 1);
     }
 
     private void registerCommands() {
@@ -98,6 +103,10 @@ public class BotHandler {
             ADMIN_ROLE = bot.getRoleById(admin_r);
         }
         return ADMIN_ROLE;
+    }
+
+    public MuteData getMuteData() {
+        return muteData;
     }
 
     public static BotHandler getINSTANCE() {

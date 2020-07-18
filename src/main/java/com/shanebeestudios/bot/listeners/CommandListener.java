@@ -32,9 +32,10 @@ public class CommandListener extends ListenerAdapter {
             if (commandMap.containsKey(command)) {
                 Command baseCommand = commandMap.get(command);
                 String[] args = Util.getSliceOfArray(splitCommand, 1, splitCommand.length);
-                if (baseCommand.run(event, args)) {
-                    assert member != null;
-                    Logger.info(member.getEffectiveName() + " issued command: <blue>" + fullCommand);
+                assert member != null;
+                Logger.info(member.getEffectiveName() + " issued command: <blue>" + fullCommand);
+                if (!baseCommand.run(event, args)) {
+                    Logger.error(fullCommand);
                 }
             }
 

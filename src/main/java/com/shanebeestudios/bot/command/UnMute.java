@@ -1,14 +1,7 @@
 package com.shanebeestudios.bot.command;
 
-import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.util.MemberUtil;
-import com.shanebeestudios.bot.util.Util;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
-
-import java.awt.*;
 
 public class UnMute extends Command {
 
@@ -30,32 +23,9 @@ public class UnMute extends Command {
                 reason.append(args[i]).append(" ");
             }
 
-            MemberUtil.removeMutedRole(muted);
-            unmuteMessage(muted, reason.toString());
+            MemberUtil.unMuteMember(muted, reason.toString(), member);
         }
         return true;
-    }
-
-    private void unmuteMessage(Member muted, String reason) {
-        TextChannel botChannel = BotHandler.getINSTANCE().getBotChannel();
-        String name = BotHandler.getBot().getSelfUser().getName();
-
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("-- UN-MUTE --")
-                .setColor(Color.GREEN)
-                .setAuthor(name, null, Util.IMAGE_URL)
-                .addField("UnMuted:", muted.getEffectiveName() + "(" + muted.getId() + ")", false)
-                .addField("Reason:", reason, false)
-                .addField("Moderator:", member.getEffectiveName(), false)
-                .build();
-
-        botChannel.sendMessage(embed).queue();
-
-        name = name + " (" + botChannel.getGuild().getName() + ")";
-        MessageEmbed toUser = new EmbedBuilder(embed)
-                .setAuthor(name, null, Util.IMAGE_URL)
-                .build();
-        MemberUtil.directMessage(muted, toUser);
     }
 
 }
