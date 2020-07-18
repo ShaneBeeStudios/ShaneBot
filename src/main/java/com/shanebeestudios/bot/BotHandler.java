@@ -9,7 +9,9 @@ import com.shanebeestudios.bot.command.UnMute;
 import com.shanebeestudios.bot.data.MuteData;
 import com.shanebeestudios.bot.listeners.CommandListener;
 import com.shanebeestudios.bot.listeners.JoinListener;
+import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.task.MuteTimer;
+import com.shanebeestudios.bot.util.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Role;
@@ -44,18 +46,24 @@ public class BotHandler {
         this.bot_c = bot_c;
         this.muted_r = muted_r;
         this.admin_r = admin_r;
+        Logger.info("Starting server...");
 
         try {
+            Logger.info("Logging in bot");
             bot = JDABuilder
                     .createDefault(token)
                     .addEventListeners(new CommandListener(this.commands), new JoinListener())
                     .build();
+            Logger.info("Successfully logged in bot: <blue>" + bot.getSelfUser().getName());
         } catch (LoginException e) {
             e.printStackTrace();
         }
         registerCommands();
         this.muteData = new MuteData();
         new MuteTimer(this, 1);
+        new ConsoleThread(bot.getSelfUser().getName()).start();
+
+        Logger.info("Bot server loaded!");
     }
 
     private void registerCommands() {
@@ -64,6 +72,7 @@ public class BotHandler {
         commands.put("unmute", new UnMute(true));
         commands.put("ban", new Ban(true));
         commands.put("test", new Test(true));
+        Logger.info("Successfully registered " + commands.size() + " command(s)!");
     }
 
     public static JDA getBot() {
@@ -107,6 +116,10 @@ public class BotHandler {
 
     public MuteData getMuteData() {
         return muteData;
+    }
+
+    public String getServerID() {
+        return server;
     }
 
     public static BotHandler getINSTANCE() {
