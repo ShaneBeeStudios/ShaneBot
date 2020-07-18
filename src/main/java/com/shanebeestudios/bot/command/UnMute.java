@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class UnMute extends Command {
 
+    public UnMute(boolean requiresAdmin) {
+        super(requiresAdmin);
+    }
+
     @Override
     public boolean run() {
         if (args.length >= 2) {

@@ -21,8 +21,8 @@ public class BotHandler {
 
     private static BotHandler INSTANCE;
     private static JDA bot;
-    private final Map<String, Command> commands = new HashMap<String, Command>();
-    private final String server, welcome_c, rules_c, bot_c, muted_c;
+    private final Map<String, Command> commands = new HashMap<>();
+    private final String server, welcome_c, rules_c, bot_c, muted_r, admin_r;
 
     // Channels
     private TextChannel WELCOME_CHANNEL;
@@ -31,14 +31,16 @@ public class BotHandler {
 
     // Rules
     private Role MUTED_ROLE;
+    private Role ADMIN_ROLE;
 
-    BotHandler(String token, String server, String welcome_c, String rules_c, String bot_c, String muted_c) {
+    BotHandler(String token, String server, String welcome_c, String rules_c, String bot_c, String muted_r, String admin_r) {
         INSTANCE = this;
         this.server = server;
         this.welcome_c = welcome_c;
         this.rules_c = rules_c;
         this.bot_c = bot_c;
-        this.muted_c = muted_c;
+        this.muted_r = muted_r;
+        this.admin_r = admin_r;
 
         try {
             bot = JDABuilder
@@ -52,22 +54,15 @@ public class BotHandler {
     }
 
     private void registerCommands() {
-        commands.put("purge", new Purge());
-        commands.put("mute", new Mute());
-        commands.put("unmute", new UnMute());
-        commands.put("ban", new Ban());
-        commands.put("test", new Test());
+        commands.put("purge", new Purge(true));
+        commands.put("mute", new Mute(true));
+        commands.put("unmute", new UnMute(true));
+        commands.put("ban", new Ban(true));
+        commands.put("test", new Test(true));
     }
 
     public static JDA getBot() {
         return bot;
-    }
-
-    public Role getMutedRole() {
-        if (MUTED_ROLE == null) {
-            MUTED_ROLE = bot.getRoleById(muted_c);
-        }
-        return MUTED_ROLE;
     }
 
     public TextChannel getBotChannel() {
@@ -89,6 +84,20 @@ public class BotHandler {
             RULES_CHANNEL = bot.getTextChannelById(rules_c);
         }
         return RULES_CHANNEL;
+    }
+
+    public Role getMutedRole() {
+        if (MUTED_ROLE == null) {
+            MUTED_ROLE = bot.getRoleById(muted_r);
+        }
+        return MUTED_ROLE;
+    }
+
+    public Role getAdminRole() {
+        if (ADMIN_ROLE == null) {
+            ADMIN_ROLE = bot.getRoleById(admin_r);
+        }
+        return ADMIN_ROLE;
     }
 
     public static BotHandler getINSTANCE() {

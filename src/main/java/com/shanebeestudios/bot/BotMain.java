@@ -32,6 +32,9 @@ public class BotMain {
         parser.accepts("muted-r", "ID of MUTED role")
                 .withRequiredArg()
                 .ofType(String.class);
+        parser.accepts("admin-r", "ID of ADMIN role")
+                .withRequiredArg()
+                .ofType(String.class);
 
         OptionSet options = parser.parse(args);
 
@@ -68,6 +71,10 @@ public class BotMain {
             Logger.error("No muted role ID specified, shutting down...");
             System.exit(1);
         }
+        if (!options.has("admin-r")) {
+            Logger.error("No admin role ID specified, shutting down...");
+            System.exit(1);
+        }
 
         String token = (String) options.valueOf("token");
         String server = (String) options.valueOf("server");
@@ -75,8 +82,9 @@ public class BotMain {
         String rulesC = (String) options.valueOf("rules-c");
         String botC = (String) options.valueOf("bot-c");
         String mutedR = (String) options.valueOf("muted-r");
+        String adminR = (String) options.valueOf("admin-r");
 
-        botHandler = new BotHandler(token, server, welcomeC, rulesC, botC, mutedR);
+        botHandler = new BotHandler(token, server, welcomeC, rulesC, botC, mutedR, adminR);
     }
 
 }

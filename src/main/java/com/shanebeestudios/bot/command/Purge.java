@@ -7,6 +7,10 @@ import java.util.List;
 
 public class Purge extends Command {
 
+    public Purge(boolean requiresAdmin) {
+        super(requiresAdmin);
+    }
+
     @Override
     public boolean run() {
         if (args.length == 0) {

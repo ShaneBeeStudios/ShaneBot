@@ -5,6 +5,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 public class Test extends Command {
 
+    public Test(boolean requiresAdmin) {
+        super(requiresAdmin);
+    }
+
     @Override
     public boolean run() {
         TextChannel welcomeChannel = BotHandler.getINSTANCE().getBotChannel(); // TEMP for testing

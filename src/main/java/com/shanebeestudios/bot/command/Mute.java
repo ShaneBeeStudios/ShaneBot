@@ -13,6 +13,10 @@ import java.awt.*;
 
 public class Mute extends Command {
 
+    public Mute(boolean requiresAdmin) {
+        super(requiresAdmin);
+    }
+
     @Override
     public boolean run() {
         if (args.length >= 4) {

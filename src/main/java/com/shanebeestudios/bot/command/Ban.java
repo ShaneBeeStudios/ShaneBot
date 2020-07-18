@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class Ban extends Command {
 
+    public Ban(boolean requiresAdmin) {
+        super(requiresAdmin);
+    }
+
     @Override
     public boolean run() {
         if (args.length >= 2) {
