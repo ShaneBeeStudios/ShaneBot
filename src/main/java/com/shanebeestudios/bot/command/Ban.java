@@ -1,6 +1,8 @@
 package com.shanebeestudios.bot.command;
 
 import com.shanebeestudios.bot.BotHandler;
+import com.shanebeestudios.bot.util.MemberUtil;
+import com.shanebeestudios.bot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -24,24 +26,31 @@ public class Ban extends Command {
                 reason.append(args[i]).append(" ");
             }
             banMessage(banned, reason.toString());
-            //channel.getGuild().ban(banned, 1, reason.toString()); TODO will test first before actually banning anyone
+            //channel.getGuild().ban(banned, 1, reason.toString()); //TODO will test first before actually banning anyone
         }
         return true;
     }
 
     private void banMessage(Member banned, String reason) {
         TextChannel botChannel = BotHandler.getINSTANCE().getBotChannel();
+        String name = BotHandler.getBot().getSelfUser().getName();
 
         MessageEmbed embed = new EmbedBuilder()
-                .setTitle("-- Ban TIME --")
+                .setTitle("-- BAN TIME --")
                 .setColor(Color.RED)
-                .setAuthor("ShaneBot", "https://i.imgur.com/VbV0p7j.png", "https://i.imgur.com/VbV0p7j.png")
+                .setAuthor(name, null, Util.IMAGE_URL)
                 .addField("Banned:", banned.getEffectiveName() + "(" + banned.getId() + ")", false)
                 .addField("Reason:", reason, false)
                 .addField("Moderator:", member.getEffectiveName(), false)
                 .build();
 
         botChannel.sendMessage(embed).queue();
+
+        name = name + " (" + botChannel.getGuild().getName() + ")";
+        MessageEmbed toUser = new EmbedBuilder(embed)
+                .setAuthor(name, null, Util.IMAGE_URL)
+                .build();
+        MemberUtil.directMessage(banned, toUser);
     }
 
 }

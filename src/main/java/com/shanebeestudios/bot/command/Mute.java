@@ -52,7 +52,7 @@ public class Mute extends Command {
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("-- MUTE TIME --")
                 .setColor(Color.ORANGE)
-                .setAuthor(name, null, "https://i.imgur.com/VbV0p7j.png")
+                .setAuthor(name, null, Util.IMAGE_URL)
                 .addField("Muted:", muted.getEffectiveName() + "(" + muted.getId() + ")", false)
                 .addField("Time:", time, false)
                 .addField("Reason:", reason, false)
@@ -63,7 +63,7 @@ public class Mute extends Command {
 
         name = name + " (" + botChannel.getGuild().getName() + ")";
         MessageEmbed toUser = new EmbedBuilder(embed)
-                .setAuthor(name, null, "https://i.imgur.com/VbV0p7j.png")
+                .setAuthor(name, null, Util.IMAGE_URL)
                 .build();
         MemberUtil.directMessage(muted, toUser);
     }

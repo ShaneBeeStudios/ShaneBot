@@ -2,6 +2,7 @@ package com.shanebeestudios.bot.command;
 
 import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.util.MemberUtil;
+import com.shanebeestudios.bot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -38,7 +39,7 @@ public class UnMute extends Command {
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("-- UN-MUTE --")
                 .setColor(Color.GREEN)
-                .setAuthor(name, null, "https://i.imgur.com/VbV0p7j.png")
+                .setAuthor(name, null, Util.IMAGE_URL)
                 .addField("UnMuted:", muted.getEffectiveName() + "(" + muted.getId() + ")", false)
                 .addField("Reason:", reason, false)
                 .addField("Moderator:", member.getEffectiveName(), false)
@@ -48,7 +49,7 @@ public class UnMute extends Command {
 
         name = name + " (" + botChannel.getGuild().getName() + ")";
         MessageEmbed toUser = new EmbedBuilder(embed)
-                .setAuthor(name, null, "https://i.imgur.com/VbV0p7j.png")
+                .setAuthor(name, null, Util.IMAGE_URL)
                 .build();
         MemberUtil.directMessage(muted, toUser);
     }
