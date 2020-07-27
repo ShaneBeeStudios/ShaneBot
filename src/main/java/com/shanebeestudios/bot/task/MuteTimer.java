@@ -8,14 +8,13 @@ import java.util.TimerTask;
 
 public class MuteTimer extends TimerTask {
 
-    private BotHandler botHandler;
-    private long t;
+    private final BotHandler botHandler;
 
     public MuteTimer(BotHandler botHandler, int seconds) {
         this.botHandler = botHandler;
         Logger.info("Starting timer...");
         Timer timer = new Timer("MuteTimer");
-        timer.schedule(this, 0, seconds * 1000);
+        timer.schedule(this, 3000, seconds * 1000);
     }
 
     @Override
