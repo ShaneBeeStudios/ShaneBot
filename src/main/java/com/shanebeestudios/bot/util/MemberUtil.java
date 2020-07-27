@@ -115,6 +115,28 @@ public class MemberUtil {
         member.getUser().openPrivateChannel().queue(s -> s.sendMessage(message));
     }
 
+    public static void banMessage(Member banned, String reason, Member moderator) {
+        TextChannel botChannel = BotHandler.getINSTANCE().getBotChannel();
+        String name = BotHandler.getBot().getSelfUser().getName();
+
+        MessageEmbed embed = new EmbedBuilder()
+                .setTitle("-- BAN TIME --")
+                .setColor(Color.RED)
+                .setAuthor(name, null, Util.IMAGE_URL)
+                .addField("Banned:", banned.getEffectiveName() + "(" + banned.getId() + ")", false)
+                .addField("Reason:", reason, false)
+                .addField("Moderator:", moderator.getEffectiveName(), false)
+                .build();
+
+        botChannel.sendMessage(embed).queue();
+
+        name = name + " (" + botChannel.getGuild().getName() + ")";
+        MessageEmbed toUser = new EmbedBuilder(embed)
+                .setAuthor(name, null, Util.IMAGE_URL)
+                .build();
+        MemberUtil.directMessage(banned, toUser);
+    }
+
     private static long parseTimespan(long time, TimeFrame timeFrame) {
 
         return (time * timeFrame.getMilliseconds()) + System.currentTimeMillis();
