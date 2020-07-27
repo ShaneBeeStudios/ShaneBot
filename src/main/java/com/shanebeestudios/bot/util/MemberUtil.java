@@ -13,10 +13,8 @@ public class MemberUtil {
 
     public static void muteMember(Member muted, long time, TimeFrame timeFrame, String reason, Member moderator) {
         // Add role
-        Role role = BotHandler.getINSTANCE().getMutedRole();
-        if (role != null) {
-            muted.getGuild().addRoleToMember(muted, role).queue();
-        }
+        addMuteRole(muted);
+
         // Add to timer
         BotHandler.getINSTANCE().getMuteData().addMute(muted, parseTimespan(time, timeFrame));
 
@@ -49,6 +47,13 @@ public class MemberUtil {
         Logger.info(" - Reason: <blue>" + reason);
         Logger.info(" - Time: <blue>" + timeFrame.getFullTime(time));
         Logger.info(" - Mod: <blue>" + moderator.getEffectiveName());
+    }
+
+    public static void addMuteRole(Member muted) {
+        Role role = BotHandler.getINSTANCE().getMutedRole();
+        if (role != null) {
+            muted.getGuild().addRoleToMember(muted, role).queue();
+        }
     }
 
     public static void unMuteMember(Member muted, String reason, Member moderator) {

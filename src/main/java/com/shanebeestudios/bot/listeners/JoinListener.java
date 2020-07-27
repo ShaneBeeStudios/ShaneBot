@@ -2,6 +2,7 @@ package com.shanebeestudios.bot.listeners;
 
 import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.util.Logger;
+import com.shanebeestudios.bot.util.MemberUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -31,6 +32,11 @@ public class JoinListener extends ListenerAdapter {
         welcomeChannel.sendMessage("Welcome " + member.getAsMention() + " to **" + event.getGuild().getName() + "**, Please " +
                 "make sure to read over " + rulesChannel.getAsMention() +
                 " ... not knowing the rules for this Discord guild will not be an excuse when a rule is broken!");
+
+        // If a user joins that was previously muted, re-add the muted role
+        if (BotHandler.getINSTANCE().getMuteData().isMuted(member)) {
+            MemberUtil.addMuteRole(member);
+        }
     }
 
 }
