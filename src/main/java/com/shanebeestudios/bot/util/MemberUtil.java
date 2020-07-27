@@ -114,7 +114,7 @@ public class MemberUtil {
     }
 
     public static void directMessage(Member member, MessageEmbed message) {
-        member.getUser().openPrivateChannel().queue(s -> s.sendMessage(message));
+        member.getUser().openPrivateChannel().queue(s -> s.sendMessage(message).queue());
     }
 
     public static void banMessage(Member banned, String reason, Member moderator) {
