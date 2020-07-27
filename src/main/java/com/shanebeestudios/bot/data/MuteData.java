@@ -111,6 +111,7 @@ public class MuteData {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void readFile(boolean silent) {
         Gson gson = new Gson();
 
@@ -120,12 +121,12 @@ public class MuteData {
 
             Reader reader = Files.newBufferedReader(MUTE_DATA_FILE.toPath());
 
-            Map<?, ?> mutes = gson.fromJson(reader, Map.class);
+            Map<String, Double> mutes = gson.fromJson(reader, Map.class);
 
             if (mutes != null) {
-                for (Map.Entry<?, ?> entry : mutes.entrySet()) {
-                    String name = ((String) entry.getKey());
-                    long time = new Double((double) entry.getValue()).longValue();
+                for (Map.Entry<String, Double> entry : mutes.entrySet()) {
+                    String name = (entry.getKey());
+                    long time = new Double(entry.getValue()).longValue();
                     this.mutes.put(name, time);
                 }
             }
