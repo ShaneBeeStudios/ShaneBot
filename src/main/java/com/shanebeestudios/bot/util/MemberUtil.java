@@ -59,6 +59,8 @@ public class MemberUtil {
     public static void unMuteMember(Member muted, String reason, Member moderator) {
         boolean auto = reason == null;
 
+        BotHandler.getINSTANCE().getMuteData().removeMute(muted.getId());
+
         // Remove role
         Role role = BotHandler.getINSTANCE().getMutedRole();
         if (role != null) {
