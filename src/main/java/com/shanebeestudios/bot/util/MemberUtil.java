@@ -60,9 +60,6 @@ public class MemberUtil {
             muted.getGuild().removeRoleFromMember(muted, role).queue();
         }
 
-        // Remove from timer
-        BotHandler.getINSTANCE().getMuteData().removeMute(muted.getId());
-
         // Send message to bot channel
         TextChannel botChannel = BotHandler.getINSTANCE().getBotChannel();
         String name = BotHandler.getBot().getSelfUser().getName();
