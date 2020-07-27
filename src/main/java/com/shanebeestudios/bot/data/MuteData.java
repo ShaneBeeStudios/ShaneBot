@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class MuteData {
 
     private final Map<String, Long> mutes = new HashMap<>();
@@ -121,11 +122,12 @@ public class MuteData {
 
             Map<?, ?> mutes = gson.fromJson(reader, Map.class);
 
-            for (Map.Entry<?, ?> entry : mutes.entrySet()) {
-                String name = ((String) entry.getKey());
-                long time = new Double((double) entry.getValue()).longValue();
-                this.mutes.put(name, time);
-                Logger.info("Loaded mute: " + name + "=" + time);
+            if (mutes != null) {
+                for (Map.Entry<?, ?> entry : mutes.entrySet()) {
+                    String name = ((String) entry.getKey());
+                    long time = new Double((double) entry.getValue()).longValue();
+                    this.mutes.put(name, time);
+                }
             }
 
             if (!silent)
