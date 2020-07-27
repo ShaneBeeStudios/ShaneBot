@@ -25,6 +25,7 @@ public class BotHandler {
 
     private static BotHandler INSTANCE;
     private static JDA bot;
+    private static String BOT_NAME = "Bot Loading...";
     private final Map<String, Command> commands = new HashMap<>();
     private final String server, welcome_c, rules_c, bot_c, muted_r, admin_r;
     private final MuteData muteData;
@@ -54,6 +55,7 @@ public class BotHandler {
                     .createDefault(token)
                     .addEventListeners(new CommandListener(this.commands), new JoinListener())
                     .build();
+            BOT_NAME = bot.getSelfUser().getName();
             Logger.info("Successfully logged in bot: <blue>" + bot.getSelfUser().getName());
         } catch (LoginException e) {
             e.printStackTrace();
@@ -77,6 +79,10 @@ public class BotHandler {
 
     public static JDA getBot() {
         return bot;
+    }
+
+    public static String getBotName() {
+        return BOT_NAME;
     }
 
     public TextChannel getBotChannel() {
