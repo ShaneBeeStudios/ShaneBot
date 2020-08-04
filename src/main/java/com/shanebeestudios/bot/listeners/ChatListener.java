@@ -1,6 +1,7 @@
 package com.shanebeestudios.bot.listeners;
 
 import com.shanebeestudios.bot.BotHandler;
+import com.shanebeestudios.bot.util.Logger;
 import com.shanebeestudios.bot.util.MemberUtil;
 import com.shanebeestudios.bot.util.TimeFrame;
 import net.dv8tion.jda.api.entities.Member;
@@ -23,6 +24,16 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) return;
+
+        String ID = event.getGuild().getId();
+        // Prevent the bot running on an unauthorized guild
+        if (!ID.equalsIgnoreCase(BotHandler.getINSTANCE().getServerID())) {
+            Logger.info("Attempting to use bot on guild: " + event.getGuild().getName());
+            event.getChannel().sendMessage("**You are not authorized to use this bot!!!**").queue();
+            return;
+        }
+
         Message message = event.getMessage();
         Member owner = event.getGuild().getOwner();
 
