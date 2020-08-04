@@ -8,6 +8,7 @@ import com.shanebeestudios.bot.util.TimeFrame;
 import com.shanebeestudios.bot.util.Util;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -33,11 +34,12 @@ public class MessageListener extends ListenerAdapter {
         Message message = event.getMessage();
         String messageRaw = message.getContentRaw();
         Member member = event.getMember();
+        TextChannel channel = event.getTextChannel();
 
         // Prevent the bot running on an unauthorized guild
         if (!ID.equalsIgnoreCase(BotHandler.getINSTANCE().getServerID())) {
             Logger.info("Attempting to use bot on guild: " + event.getGuild().getName());
-            event.getChannel().sendMessage("**You are not authorized to use this bot!!!**").queue();
+            channel.sendMessage("**You are not authorized to use this bot!!!**").queue();
             return;
         }
 
@@ -55,6 +57,8 @@ public class MessageListener extends ListenerAdapter {
                 if (!baseCommand.run(event, args)) {
                     Logger.error(fullCommand);
                 }
+            } else {
+                channel.sendMessage("**Invalid Command:** " + fullCommand).queue();
             }
         } else {
             Member owner = event.getGuild().getOwner();
@@ -63,8 +67,8 @@ public class MessageListener extends ListenerAdapter {
             if (message.getMentionedMembers().contains(owner)) {
                 Member tagger = event.getMember();
                 if (tagger == null) return;
-                MemberUtil.mentionRemovalMessage(tagger, event.getTextChannel());
-                event.getMessage().delete().queue();
+                MemberUtil.mentionRemovalMessage(tagger, channel);
+                message.delete().queue();
                 addTagCount(tagger);
             }
         }
