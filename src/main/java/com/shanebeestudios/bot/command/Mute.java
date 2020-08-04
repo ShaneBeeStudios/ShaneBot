@@ -38,9 +38,10 @@ public class Mute extends Command {
             }
 
             MemberUtil.muteMember(muted, t, timeFrame, reason.toString(), member);
+        } else {
+            channel.sendMessage("**Invalid Arguments:** !mute <member(tag/id)> <time> <reason>").queue();
         }
         return true;
     }
-
 
 }

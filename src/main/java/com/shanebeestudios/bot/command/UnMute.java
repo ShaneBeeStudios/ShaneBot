@@ -24,6 +24,8 @@ public class UnMute extends Command {
             }
 
             MemberUtil.unMuteMember(muted, reason.toString(), member);
+        } else {
+            channel.sendMessage("**Invalid arguments:** !unmute <member(tag/id)> <reason>").queue();
         }
         return true;
     }
