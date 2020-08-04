@@ -12,10 +12,12 @@ import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.task.MuteTimer;
 import com.shanebeestudios.bot.util.Logger;
+import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
@@ -52,8 +54,9 @@ public class BotHandler {
         try {
             Logger.info("Logging in bot");
             bot = JDABuilder
-                    .createDefault(token)
-                    .addEventListeners(new MessageListener(this, this.commands), new JoinListener())
+                    .createLight(token, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
+                    .addEventListeners(new MessageListener(this, this.commands))
+                    .addEventListeners(new JoinListener())
                     .build();
             BOT_NAME = bot.getSelfUser().getName();
             Logger.info("Successfully logged in bot: <blue>" + bot.getSelfUser().getName());
