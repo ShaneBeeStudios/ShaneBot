@@ -6,12 +6,13 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
 public class MemberUtil {
 
-    public static void muteMember(Member muted, long time, TimeFrame timeFrame, String reason, Member moderator) {
+    public static void muteMember(Member muted, long time, TimeFrame timeFrame, String reason, @Nullable Member mod) {
         // Add role
         addMuteRole(muted);
 
@@ -29,7 +30,7 @@ public class MemberUtil {
                 .addField("Muted:", muted.getEffectiveName() + "(" + muted.getId() + ")", false)
                 .addField("Time:", timeFrame.getFullTime(time), false)
                 .addField("Reason:", reason, false)
-                .addField("Moderator:", moderator.getEffectiveName(), false)
+                .addField("Moderator:", mod != null ? mod.getEffectiveName() : "<none>", false)
                 .build();
 
         botChannel.sendMessage(embed).queue();
@@ -46,7 +47,7 @@ public class MemberUtil {
         Logger.info(" - Muting: <blue>" + muted.getEffectiveName());
         Logger.info(" - Reason: <blue>" + reason);
         Logger.info(" - Time: <blue>" + timeFrame.getFullTime(time));
-        Logger.info(" - Mod: <blue>" + moderator.getEffectiveName());
+        Logger.info(" - Mod: <blue>" + (mod != null ? mod.getEffectiveName() : "<none>"));
     }
 
     public static void addMuteRole(Member muted) {
