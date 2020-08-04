@@ -12,7 +12,6 @@ import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.task.MuteTimer;
 import com.shanebeestudios.bot.util.Logger;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Role;
