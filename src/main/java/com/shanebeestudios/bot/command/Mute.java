@@ -3,7 +3,6 @@ package com.shanebeestudios.bot.command;
 import com.shanebeestudios.bot.util.MemberUtil;
 import com.shanebeestudios.bot.util.TimeFrame;
 import com.shanebeestudios.bot.util.Util;
-import net.dv8tion.jda.api.entities.Member;
 
 public class Mute extends Command {
 
@@ -15,11 +14,6 @@ public class Mute extends Command {
     public boolean run() {
         if (args.length >= 4) {
             parseMember(0, muted -> {
-                if (muted == null) {
-                    channel.sendMessage("Invalid Member: " + args[0]).queue();
-                    return;
-                }
-
                 int t = Util.parseInt(args[1]);
                 if (t == 0) {
                     channel.sendMessage("Invalid time value: " + args[1]).queue();
