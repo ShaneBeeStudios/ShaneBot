@@ -6,6 +6,8 @@ public class Ban extends Command {
 
     public Ban(boolean requiresAdmin) {
         super(requiresAdmin);
+        this.description = "Ban a member from this guild";
+        this.usage = "!ban <member(tag/id)> <reason>";
     }
 
     @Override

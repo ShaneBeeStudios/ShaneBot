@@ -2,6 +2,7 @@ package com.shanebeestudios.bot;
 
 import com.shanebeestudios.bot.command.Ban;
 import com.shanebeestudios.bot.command.Command;
+import com.shanebeestudios.bot.command.Commands;
 import com.shanebeestudios.bot.command.Mute;
 import com.shanebeestudios.bot.command.Playing;
 import com.shanebeestudios.bot.command.Purge;
@@ -77,6 +78,7 @@ public class BotHandler {
         commands.put("unmute", new UnMute(true));
         commands.put("ban", new Ban(true));
         commands.put("play", new Playing(true));
+        commands.put("commands", new Commands(true, this));
         commands.put("test", new Test(true));
         Logger.info("Successfully registered " + commands.size() + " command(s)!");
     }
@@ -130,6 +132,10 @@ public class BotHandler {
 
     public String getServerID() {
         return server;
+    }
+
+    public Map<String, Command> getCommands() {
+        return commands;
     }
 
     public static BotHandler getINSTANCE() {

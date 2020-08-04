@@ -7,6 +7,8 @@ public class Playing extends Command {
 
     public Playing(boolean requiresAdmin) {
         super(requiresAdmin);
+        this.description = "Set the 'game' the bot is playing";
+        this.usage = "!play <what to play>";
     }
 
     @Override
@@ -18,7 +20,7 @@ public class Playing extends Command {
             }
             BotHandler.getBot().getPresence().setActivity(Activity.playing(reason.toString()));
         } else {
-            channel.sendMessage("**Invalid Arguments:** !play <what to play>").queue();
+            channel.sendMessage("**Invalid Arguments:** " + usage).queue();
         }
         message.delete().queue();
         return true;

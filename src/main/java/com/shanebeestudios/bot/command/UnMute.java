@@ -6,6 +6,8 @@ public class UnMute extends Command {
 
     public UnMute(boolean requiresAdmin) {
         super(requiresAdmin);
+        this.description = "Unmute a member";
+        this.usage = "!unmute <member(tag/id)> <reason>";
     }
 
     @Override

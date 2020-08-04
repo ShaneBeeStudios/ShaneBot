@@ -14,11 +14,13 @@ import java.util.function.Consumer;
  */
 public abstract class Command {
 
-    protected Message message;
-    protected TextChannel channel;
-    protected Member member;
-    protected String[] args;
-    private final boolean requiresAdmin;
+    Message message;
+    TextChannel channel;
+    Member member;
+    String[] args;
+    final boolean requiresAdmin;
+    String description = "";
+    String usage = "";
 
     public Command(boolean requiresAdmin) {
         this.requiresAdmin = requiresAdmin;
@@ -47,12 +49,30 @@ public abstract class Command {
      * @param position Potion in command args
      */
     @SuppressWarnings("SameParameterValue")
-    protected void parseMember(int position, Consumer<Member> member) {
+    void parseMember(int position, Consumer<Member> member) {
         if (args.length > position) {
             String memberString = args[position].replace("<@!", "").replace(">", "");
             channel.getGuild().retrieveMemberById(memberString).queue(member, fail ->
                     channel.sendMessage("Invalid Member: " + args[0]).queue());
         }
+    }
+
+    /**
+     * Get the description of this command
+     *
+     * @return Description of this command
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Get the usage of this command
+     *
+     * @return Usage of this command
+     */
+    public String getUsage() {
+        return usage;
     }
 
 }

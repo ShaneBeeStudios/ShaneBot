@@ -9,6 +9,8 @@ public class Purge extends Command {
 
     public Purge(boolean requiresAdmin) {
         super(requiresAdmin);
+        this.description = "Purge up to 100 messages in a channel";
+        this.usage = "!purge <number>";
     }
 
     @Override

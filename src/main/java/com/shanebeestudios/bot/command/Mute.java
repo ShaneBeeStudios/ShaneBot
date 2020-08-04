@@ -8,6 +8,8 @@ public class Mute extends Command {
 
     public Mute(boolean requiresAdmin) {
         super(requiresAdmin);
+        this.description = "Mute a member for a specific time";
+        this.usage = "!mute <member(tag/id)> <time> <reason>";
     }
 
     @Override
