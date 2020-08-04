@@ -32,7 +32,7 @@ public abstract class Command {
         this.message = event.getMessage();
         if (member == null) return true;
 
-        if (requiresAdmin && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole())) {
+        if (requiresAdmin && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole()) && !member.isOwner()) {
             return true;
         }
         this.args = args;
