@@ -1,15 +1,14 @@
 package com.shanebeestudios.bot;
 
-import com.shanebeestudios.bot.command.Command;
 import com.shanebeestudios.bot.command.Ban;
+import com.shanebeestudios.bot.command.Command;
 import com.shanebeestudios.bot.command.Mute;
 import com.shanebeestudios.bot.command.Purge;
 import com.shanebeestudios.bot.command.Test;
 import com.shanebeestudios.bot.command.UnMute;
 import com.shanebeestudios.bot.data.MuteData;
-import com.shanebeestudios.bot.listeners.ChatListener;
-import com.shanebeestudios.bot.listeners.CommandListener;
 import com.shanebeestudios.bot.listeners.JoinListener;
+import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.task.MuteTimer;
 import com.shanebeestudios.bot.util.Logger;
@@ -54,7 +53,7 @@ public class BotHandler {
             Logger.info("Logging in bot");
             bot = JDABuilder
                     .createDefault(token)
-                    .addEventListeners(new CommandListener(this.commands), new JoinListener(), new ChatListener(this))
+                    .addEventListeners(new MessageListener(this, this.commands), new JoinListener())
                     .build();
             BOT_NAME = bot.getSelfUser().getName();
             Logger.info("Successfully logged in bot: <blue>" + bot.getSelfUser().getName());

@@ -1,9 +1,11 @@
 package com.shanebeestudios.bot.listeners;
 
 import com.shanebeestudios.bot.BotHandler;
+import com.shanebeestudios.bot.command.Command;
 import com.shanebeestudios.bot.util.Logger;
 import com.shanebeestudios.bot.util.MemberUtil;
 import com.shanebeestudios.bot.util.TimeFrame;
+import com.shanebeestudios.bot.util.Util;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -13,20 +15,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatListener extends ListenerAdapter {
+public class MessageListener extends ListenerAdapter {
 
+    private final Map<String, Command> commandMap;
     private final BotHandler botHandler;
     private final Map<Member, Integer> mentions = new HashMap<>();
 
-    public ChatListener(BotHandler botHandler) {
+    public MessageListener(BotHandler botHandler, Map<String, Command> commandMap) {
         this.botHandler = botHandler;
+        this.commandMap = commandMap;
     }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
-
         String ID = event.getGuild().getId();
+        Message message = event.getMessage();
+        String messageRaw = message.getContentRaw();
+        Member member = event.getMember();
+
         // Prevent the bot running on an unauthorized guild
         if (!ID.equalsIgnoreCase(BotHandler.getINSTANCE().getServerID())) {
             Logger.info("Attempting to use bot on guild: " + event.getGuild().getName());
@@ -34,16 +41,32 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        Message message = event.getMessage();
-        Member owner = event.getGuild().getOwner();
+        // HANDLE COMMANDS
+        if (messageRaw.charAt(0) == '!') {
+            String fullCommand = messageRaw.substring(1);
+            String[] splitCommand = fullCommand.split(" ");
+            String command = splitCommand[0];
 
-        // Shane no like getting tagged
-        if (message.getMentionedMembers().contains(owner)) {
-            Member tagger = event.getMember();
-            if (tagger == null) return;
-            MemberUtil.mentionRemovalMessage(tagger, event.getTextChannel());
-            event.getMessage().delete().queue();
-            addTagCount(tagger);
+            if (commandMap.containsKey(command)) {
+                Command baseCommand = commandMap.get(command);
+                String[] args = Util.getSliceOfArray(splitCommand, 1, splitCommand.length);
+                assert member != null;
+                Logger.info(member.getEffectiveName() + " issued command: <blue>" + fullCommand);
+                if (!baseCommand.run(event, args)) {
+                    Logger.error(fullCommand);
+                }
+            }
+        } else {
+            Member owner = event.getGuild().getOwner();
+
+            // Shane no like getting tagged
+            if (message.getMentionedMembers().contains(owner)) {
+                Member tagger = event.getMember();
+                if (tagger == null) return;
+                MemberUtil.mentionRemovalMessage(tagger, event.getTextChannel());
+                event.getMessage().delete().queue();
+                addTagCount(tagger);
+            }
         }
     }
 
