@@ -17,7 +17,7 @@ public class Ban extends Command {
                     reason.append(args[i]).append(" ");
                 }
                 MemberUtil.banMessage(banned, reason.toString(), member);
-                channel.getGuild().ban(banned, 1, reason.toString()).queue(); //TODO will test first before actually banning anyone
+                channel.getGuild().ban(banned, 1, reason.toString()).queue();
             });
         }
         return true;
