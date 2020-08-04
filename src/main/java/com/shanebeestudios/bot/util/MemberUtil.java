@@ -125,6 +125,11 @@ public class MemberUtil {
                 .addField("Channel:", channel.getName(), false)
                 .build();
         botChannel.sendMessage(embed).queue();
+
+        // Log to console
+        Logger.info("MENTION REMOVAL:");
+        Logger.info(" - Tagger: <purple>" + member.getEffectiveName());
+        Logger.info(" - Channel: <purple>" + channel.getName());
     }
 
     public static void directMessage(Member member, MessageEmbed message) {
