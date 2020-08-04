@@ -67,7 +67,7 @@ public class BotHandler {
         }
         registerCommands();
         this.muteData = new MuteData();
-        new MuteTimer(this, 1);
+        new MuteTimer(this, 60);
         new ConsoleThread(bot.getSelfUser().getName()).start();
 
         Logger.info("Bot server loaded!");
