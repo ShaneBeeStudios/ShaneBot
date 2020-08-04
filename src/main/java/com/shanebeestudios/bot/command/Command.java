@@ -3,11 +3,11 @@ package com.shanebeestudios.bot.command;
 import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Base command class for all commands
@@ -44,14 +44,14 @@ public abstract class Command {
      * Parse a Member at a specific position in the command args
      *
      * @param position Potion in command args
-     * @return Member if found, null otherwise
      */
-    protected Member parseMember(int position) {
+    @SuppressWarnings("SameParameterValue")
+    protected void parseMember(int position, Consumer<Member> member) {
         if (args.length > position) {
             String memberString = args[position].replace("<@!", "").replace(">", "");
-            return channel.getGuild().getMemberById(memberString);
+            channel.getGuild().retrieveMemberById(memberString).queue(member, fail ->
+                    channel.sendMessage("Invalid Member: " + args[0]).queue());
         }
-        return null;
     }
 
 }

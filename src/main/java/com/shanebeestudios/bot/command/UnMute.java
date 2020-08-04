@@ -12,18 +12,19 @@ public class UnMute extends Command {
     @Override
     public boolean run() {
         if (args.length >= 2) {
-            Member muted = parseMember(0);
-            if (muted == null) {
-                channel.sendMessage("Invalid Member: " + args[0]).queue();
-                return true;
-            }
+            parseMember(0, muted -> {
+                if (muted == null) {
+                    channel.sendMessage("Invalid Member: " + args[0]).queue();
+                    return;
+                }
 
-            StringBuilder reason = new StringBuilder();
-            for (int i = 1; i < args.length; i++) {
-                reason.append(args[i]).append(" ");
-            }
+                StringBuilder reason = new StringBuilder();
+                for (int i = 1; i < args.length; i++) {
+                    reason.append(args[i]).append(" ");
+                }
 
-            MemberUtil.unMuteMember(muted, reason.toString(), member);
+                MemberUtil.unMuteMember(muted, reason.toString(), member);
+            });
         } else {
             channel.sendMessage("**Invalid arguments:** !unmute <member(tag/id)> <reason>").queue();
         }

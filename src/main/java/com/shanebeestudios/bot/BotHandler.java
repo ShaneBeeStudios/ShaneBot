@@ -53,7 +53,7 @@ public class BotHandler {
         try {
             Logger.info("Logging in bot");
             bot = JDABuilder
-                    .createLight(token, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
+                    .createDefault(token, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
                     .addEventListeners(new MessageListener(this, this.commands))
                     .addEventListeners(new JoinListener())
                     .build();

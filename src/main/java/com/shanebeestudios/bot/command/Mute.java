@@ -14,30 +14,32 @@ public class Mute extends Command {
     @Override
     public boolean run() {
         if (args.length >= 4) {
-            Member muted = parseMember(0);
-            if (muted == null) {
-                channel.sendMessage("Invalid Member: " + args[0]).queue();
-                return true;
-            }
+            parseMember(0, muted -> {
+                if (muted == null) {
+                    channel.sendMessage("Invalid Member: " + args[0]).queue();
+                    return;
+                }
 
-            int t = Util.parseInt(args[1]);
-            if (t == 0) {
-                channel.sendMessage("Invalid time value: " + args[1]).queue();
-                return true;
-            }
+                int t = Util.parseInt(args[1]);
+                if (t == 0) {
+                    channel.sendMessage("Invalid time value: " + args[1]).queue();
+                    return;
+                }
 
-            TimeFrame timeFrame = TimeFrame.match(args[2]);
-            if (timeFrame == null) {
-                channel.sendMessage("Invalid time frame: " + args[2]).queue();
-                return true;
-            }
+                TimeFrame timeFrame = TimeFrame.match(args[2]);
+                if (timeFrame == null) {
+                    channel.sendMessage("Invalid time frame: " + args[2]).queue();
+                    return;
+                }
 
-            StringBuilder reason = new StringBuilder();
-            for (int i = 3; i < args.length; i++) {
-                reason.append(args[i]).append(" ");
-            }
+                StringBuilder reason = new StringBuilder();
+                for (int i = 3; i < args.length; i++) {
+                    reason.append(args[i]).append(" ");
+                }
 
-            MemberUtil.muteMember(muted, t, timeFrame, reason.toString(), member);
+                MemberUtil.muteMember(muted, t, timeFrame, reason.toString(), member);
+            });
+            return true;
         } else {
             channel.sendMessage("**Invalid Arguments:** !mute <member(tag/id)> <time> <reason>").queue();
         }
