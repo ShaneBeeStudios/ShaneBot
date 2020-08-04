@@ -114,6 +114,19 @@ public class MemberUtil {
         }
     }
 
+    public static void mentionRemovalMessage(Member member, TextChannel channel) {
+        TextChannel botChannel = BotHandler.getINSTANCE().getBotChannel();
+        String name = BotHandler.getBot().getSelfUser().getName();
+        MessageEmbed embed = new EmbedBuilder()
+                .setTitle("-- MENTION REMOVAL --")
+                .setColor(Color.MAGENTA)
+                .setAuthor(name, null, Util.IMAGE_URL)
+                .addField("Tagger:" , member.getEffectiveName(), false)
+                .addField("Channel:", channel.getName(), false)
+                .build();
+        botChannel.sendMessage(embed).queue();
+    }
+
     public static void directMessage(Member member, MessageEmbed message) {
         member.getUser().openPrivateChannel().queue(s -> s.sendMessage(message).queue());
     }
