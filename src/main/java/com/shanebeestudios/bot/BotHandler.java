@@ -6,6 +6,7 @@ import com.shanebeestudios.bot.command.Commands;
 import com.shanebeestudios.bot.command.Mute;
 import com.shanebeestudios.bot.command.Playing;
 import com.shanebeestudios.bot.command.Purge;
+import com.shanebeestudios.bot.command.Release;
 import com.shanebeestudios.bot.command.Test;
 import com.shanebeestudios.bot.command.UnMute;
 import com.shanebeestudios.bot.data.MuteData;
@@ -78,6 +79,7 @@ public class BotHandler {
         commands.put("unmute", new UnMute(true));
         commands.put("ban", new Ban(true));
         commands.put("play", new Playing(true));
+        commands.put("release", new Release(true));
         commands.put("commands", new Commands(true, this));
         commands.put("test", new Test(true));
         Logger.info("Successfully registered " + commands.size() + " command(s)!");
