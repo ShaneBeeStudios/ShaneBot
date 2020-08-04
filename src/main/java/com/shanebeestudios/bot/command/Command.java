@@ -27,6 +27,7 @@ public abstract class Command {
     public boolean run(MessageReceivedEvent event, String[] args) {
         this.channel = event.getTextChannel();
         this.member = event.getMember();
+        this.message = event.getMessage();
         if (member == null) return true;
 
         if (requiresAdmin && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole())) {
