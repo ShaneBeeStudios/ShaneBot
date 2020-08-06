@@ -1,6 +1,7 @@
 package com.shanebeestudios.bot;
 
 import com.shanebeestudios.bot.command.*;
+import com.shanebeestudios.bot.command.Command.Permission;
 import com.shanebeestudios.bot.data.MuteData;
 import com.shanebeestudios.bot.listeners.JoinListener;
 import com.shanebeestudios.bot.listeners.MessageListener;
@@ -66,15 +67,15 @@ public class BotHandler {
     }
 
     private void registerCommands() {
-        commands.put("purge", new Purge(true));
-        commands.put("mute", new Mute(true));
-        commands.put("unmute", new UnMute(true));
-        commands.put("ban", new Ban(true));
-        commands.put("play", new Playing(true));
-        commands.put("release", new Release(true));
-        commands.put("say", new Say(true));
-        commands.put("commands", new Commands(true, this));
-        commands.put("test", new Test(true));
+        commands.put("purge", new Purge(Permission.ADMIN));
+        commands.put("mute", new Mute(Permission.ADMIN));
+        commands.put("unmute", new UnMute(Permission.ADMIN));
+        commands.put("ban", new Ban(Permission.ADMIN));
+        commands.put("play", new Playing(Permission.ADMIN));
+        commands.put("release", new Release(Permission.ADMIN));
+        commands.put("say", new Say(Permission.ADMIN));
+        commands.put("commands", new Commands(Permission.ADMIN, this));
+        commands.put("test", new Test(Permission.OWNER));
         Logger.info("Successfully registered " + commands.size() + " command(s)!");
     }
 

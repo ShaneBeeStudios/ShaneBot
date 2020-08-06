@@ -4,8 +4,8 @@ import com.shanebeestudios.bot.util.MemberUtil;
 
 public class UnMute extends Command {
 
-    public UnMute(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public UnMute(Permission permission) {
+        super(permission);
         this.description = "Unmute a member";
         this.usage = "!unmute <member(tag/id)> <reason>";
     }

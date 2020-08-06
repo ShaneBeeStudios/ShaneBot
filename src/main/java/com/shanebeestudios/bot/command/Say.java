@@ -2,8 +2,8 @@ package com.shanebeestudios.bot.command;
 
 public class Say extends Command {
 
-    public Say(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Say(Permission permission) {
+        super(permission);
         this.description = "Make the bot say a message";
         this.usage = "!say <message>";
     }

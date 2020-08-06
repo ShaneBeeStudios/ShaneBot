@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 public class Test extends Command {
 
-    public Test(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Test(Permission permission) {
+        super(permission);
     }
 
     @Override

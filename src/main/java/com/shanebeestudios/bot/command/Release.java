@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class Release extends Command {
 
-    public Release(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Release(Permission permission) {
+        super(permission);
         this.description = "Release a plugin update";
         this.usage = "!release <plugin> <version> <link> <description>";
     }

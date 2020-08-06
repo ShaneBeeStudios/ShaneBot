@@ -5,8 +5,8 @@ import net.dv8tion.jda.api.entities.Activity;
 
 public class Playing extends Command {
 
-    public Playing(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Playing(Permission permission) {
+        super(permission);
         this.description = "Set the 'game' the bot is playing";
         this.usage = "!play <what to play>";
     }

@@ -18,12 +18,12 @@ public abstract class Command {
     TextChannel channel;
     Member member;
     String[] args;
-    final boolean requiresAdmin;
+    final Permission permission;
     String description = "";
     String usage = "";
 
-    public Command(boolean requiresAdmin) {
-        this.requiresAdmin = requiresAdmin;
+    public Command(Permission permission) {
+        this.permission = permission;
     }
 
     public boolean run(MessageReceivedEvent event, String[] args) {
@@ -32,7 +32,11 @@ public abstract class Command {
         this.message = event.getMessage();
         if (member == null) return true;
 
-        if (requiresAdmin && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole()) && !member.isOwner()) {
+        if (permission == Permission.OWNER && !member.isOwner()) {
+            return true;
+        }
+
+        if (permission == Permission.ADMIN && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole()) && !member.isOwner()) {
             return true;
         }
         this.args = args;
@@ -73,6 +77,29 @@ public abstract class Command {
      */
     public String getUsage() {
         return usage;
+    }
+
+    public boolean hasPermission(Member member) {
+        if (permission == Permission.OWNER && !member.isOwner()) {
+            return false;
+        }
+        return permission != Permission.ADMIN || member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole()) || member.isOwner();
+    }
+
+    public enum Permission {
+        OWNER(10),
+        ADMIN(9),
+        NONE(0);
+
+        private final int level;
+
+        Permission(int level) {
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
     }
 
 }

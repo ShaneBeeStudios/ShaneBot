@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Purge extends Command {
 
-    public Purge(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Purge(Permission permission) {
+        super(permission);
         this.description = "Purge up to 100 messages in a channel";
         this.usage = "!purge <number>";
     }

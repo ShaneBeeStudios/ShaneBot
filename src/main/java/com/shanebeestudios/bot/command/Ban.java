@@ -4,8 +4,8 @@ import com.shanebeestudios.bot.util.MemberUtil;
 
 public class Ban extends Command {
 
-    public Ban(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Ban(Permission permission) {
+        super(permission);
         this.description = "Ban a member from this guild";
         this.usage = "!ban <member(tag/id)> <reason>";
     }

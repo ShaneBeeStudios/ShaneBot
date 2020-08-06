@@ -12,8 +12,8 @@ public class Commands extends Command {
 
     private final BotHandler botHandler;
 
-    public Commands(boolean requiresAdmin, BotHandler botHandler) {
-        super(requiresAdmin);
+    public Commands(Permission permission, BotHandler botHandler) {
+        super(permission);
         this.botHandler = botHandler;
     }
 

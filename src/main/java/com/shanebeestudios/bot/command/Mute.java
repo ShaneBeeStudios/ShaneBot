@@ -6,8 +6,8 @@ import com.shanebeestudios.bot.util.Util;
 
 public class Mute extends Command {
 
-    public Mute(boolean requiresAdmin) {
-        super(requiresAdmin);
+    public Mute(Permission permission) {
+        super(permission);
         this.description = "Mute a member for a specific time";
         this.usage = "!mute <member(tag/id)> <time> <reason>";
     }
