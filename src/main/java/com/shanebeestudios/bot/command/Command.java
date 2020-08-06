@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -32,13 +31,10 @@ public abstract class Command {
         this.message = event.getMessage();
         if (member == null) return true;
 
-        if (permission == Permission.OWNER && !member.isOwner()) {
+        if (!hasPermission(member)) {
             return true;
         }
 
-        if (permission == Permission.ADMIN && !member.getRoles().contains(BotHandler.getINSTANCE().getAdminRole()) && !member.isOwner()) {
-            return true;
-        }
         this.args = args;
         return run();
     }
@@ -50,7 +46,8 @@ public abstract class Command {
     /**
      * Parse a Member at a specific position in the command args
      *
-     * @param position Potion in command args
+     * @param position Position in command args
+     * @param member Consumer to do stuff with the retrieved member
      */
     @SuppressWarnings("SameParameterValue")
     void parseMember(int position, Consumer<Member> member) {
@@ -79,6 +76,12 @@ public abstract class Command {
         return usage;
     }
 
+    /**
+     * Check if this member has permission to use this comamnd
+     *
+     * @param member Member to check permission for
+     * @return True if the member has permission to use this command
+     */
     public boolean hasPermission(Member member) {
         if (permission == Permission.OWNER && !member.isOwner()) {
             return false;
