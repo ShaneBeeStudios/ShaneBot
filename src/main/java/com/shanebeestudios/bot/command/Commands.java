@@ -31,7 +31,7 @@ public class Commands extends Command {
         Map<String, Command> commands = botHandler.getCommands();
         for (String c : commands.keySet()) {
             Command command = commands.get(c);
-            if (command != this && !c.equalsIgnoreCase("test")) {
+            if (command != this && !c.equalsIgnoreCase("test") && command.hasPermission(member)) {
                 embedBuilder.addField("**__" + c + "__**:", command.getDescription() + System.lineSeparator() + "```" + command.getUsage() + "```", false);
             }
         }
