@@ -71,9 +71,9 @@ public class BotHandler {
         commands.put("mute", new Mute(Permission.ADMIN));
         commands.put("unmute", new UnMute(Permission.ADMIN));
         commands.put("ban", new Ban(Permission.ADMIN));
-        commands.put("play", new Playing(Permission.ADMIN));
+        commands.put("play", new Playing(Permission.OWNER));
         commands.put("release", new Release(Permission.ADMIN));
-        commands.put("say", new Say(Permission.ADMIN));
+        commands.put("say", new Say(Permission.OWNER));
         commands.put("commands", new Commands(Permission.NONE, this));
         commands.put("test", new Test(Permission.OWNER));
         Logger.info("Successfully registered " + commands.size() + " command(s)!");
