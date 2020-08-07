@@ -13,6 +13,7 @@ public class Playing extends Command {
 
     @Override
     public boolean run() {
+        message.delete().queue();
         if (args.length > 0) {
             StringBuilder reason = new StringBuilder();
             for (String arg : args) {
@@ -22,7 +23,6 @@ public class Playing extends Command {
         } else {
             channel.sendMessage("**Invalid Arguments:** " + usage).queue();
         }
-        message.delete().queue();
         return true;
     }
 }

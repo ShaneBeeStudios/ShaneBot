@@ -14,6 +14,7 @@ public class Mute extends Command {
 
     @Override
     public boolean run() {
+        message.delete().queue();
         if (args.length >= 4) {
             parseMember(0, muted -> {
                 int t = Util.parseInt(args[1]);
@@ -35,7 +36,6 @@ public class Mute extends Command {
 
                 MemberUtil.muteMember(muted, t, timeFrame, reason.toString(), member);
             });
-            return true;
         } else {
             channel.sendMessage("**Invalid Arguments:** !mute <member(tag/id)> <time> <reason>").queue();
         }

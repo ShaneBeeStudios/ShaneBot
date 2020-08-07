@@ -12,6 +12,7 @@ public class UnMute extends Command {
 
     @Override
     public boolean run() {
+        message.delete().queue();
         if (args.length >= 2) {
             parseMember(0, muted -> {
                 StringBuilder reason = new StringBuilder();
