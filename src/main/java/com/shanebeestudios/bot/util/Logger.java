@@ -20,18 +20,15 @@ public class Logger {
     private static final String WHITE = "\u001B[37m";
 
     public static void info(String info) {
-        LocalDateTime now = LocalDateTime.now();
-        log("[" + DTF.format(now) + " " + CYAN + threadName() + RESET + " INFO" + "]: " + info + RESET);
+        log(format(Type.INFO) + info);
     }
 
     public static void warn(String warning) {
-        LocalDateTime now = LocalDateTime.now();
-        log(YELLOW + "[" + DTF.format(now) + " " + CYAN + threadName() + YELLOW + " WARN" + "]: " + warning + RESET);
+        log(format(Type.WARN) + warning);
     }
 
     public static void error(String error) {
-        LocalDateTime now = LocalDateTime.now();
-        log(RED + "[" + DTF.format(now) + " " + CYAN + threadName() + RED + " ERROR" + "]: " + error + RESET);
+        log(format(Type.ERROR) + error);
     }
 
     private static void log(String message) {
@@ -39,7 +36,7 @@ public class Logger {
                 .replace("<reset>", RESET).replace("<black>", BLACK).replace("<red>", RED)
                 .replace("<green>", GREEN).replace("<yellow>", YELLOW).replace("<blue>", BLUE)
                 .replace("<purple>", PURPLE).replace("<cyan>", CYAN).replace("<white>", WHITE);
-        System.out.println(newMessage);
+        System.out.println(newMessage + RESET);
     }
 
     private static String threadName() {
@@ -49,6 +46,25 @@ public class Logger {
             thread.setName(BotHandler.getBotName());
         }
         return thread.getName();
+    }
+
+    private static String format(Type type) {
+        String time = DTF.format(LocalDateTime.now());
+        return type.color + "[" + time + " " + CYAN + threadName() + type.color + " " + type.name + "]: ";
+    }
+
+    enum Type {
+        INFO(RESET, "INFO"),
+        WARN(YELLOW, "WARN"),
+        ERROR(RED, "ERROR");
+
+        private final String color;
+        private final String name;
+
+        Type(String color, String name) {
+            this.color = color;
+            this.name = name;
+        }
     }
 
 }
