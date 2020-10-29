@@ -67,8 +67,8 @@ public class MessageListener extends ListenerAdapter {
             if (message.getMentionedMembers().contains(owner)) {
                 Member tagger = event.getMember();
                 if (tagger == null) return;
-                MemberUtil.mentionRemovalMessage(tagger, channel);
                 message.delete().queue();
+                MemberUtil.mentionRemovalMessage(tagger, channel);
                 addTagCount(tagger);
             }
         }
