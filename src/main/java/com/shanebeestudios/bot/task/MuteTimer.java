@@ -14,15 +14,11 @@ public class MuteTimer extends TimerTask {
         this.botHandler = botHandler;
         Logger.info("Starting timer...");
         Timer timer = new Timer("MuteTimer");
-        timer.schedule(this, 3000, seconds * 1000);
+        timer.schedule(this, 3000, seconds * 1000L);
     }
 
     @Override
     public void run() {
-        tick();
-    }
-
-    private void tick() {
         botHandler.getMuteData().checkMutes();
     }
 
