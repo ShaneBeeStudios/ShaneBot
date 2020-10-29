@@ -23,12 +23,24 @@ public class Logger {
         log(format(Type.INFO) + info);
     }
 
+    public static void info(String format, Object... objects) {
+        info(String.format(format, objects));
+    }
+
     public static void warn(String warning) {
         log(format(Type.WARN) + warning);
     }
 
+    public static void warn(String format, Object... objects) {
+        warn(String.format(format, objects));
+    }
+
     public static void error(String error) {
         log(format(Type.ERROR) + error);
+    }
+
+    public static void error(String format, Object... objects) {
+        error(String.format(format, objects));
     }
 
     private static void log(String message) {
