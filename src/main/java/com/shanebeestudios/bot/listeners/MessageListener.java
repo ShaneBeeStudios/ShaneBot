@@ -57,8 +57,6 @@ public class MessageListener extends ListenerAdapter {
                 if (!baseCommand.run(event, args)) {
                     Logger.error(fullCommand);
                 }
-            } else {
-                channel.sendMessage("**Invalid Command:** " + fullCommand).queue();
             }
         } else {
             Member owner = event.getGuild().getOwner();
