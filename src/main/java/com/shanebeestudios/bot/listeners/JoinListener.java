@@ -26,12 +26,15 @@ public class JoinListener extends ListenerAdapter {
         }
 
         Member member = event.getMember();
-        TextChannel welcomeChannel = BotHandler.getINSTANCE().getWelcomeChannel(); // TEMP for testing
-        TextChannel rulesChannel = BotHandler.getINSTANCE().getRulesChannel(); // TEMP for testing
-
-        welcomeChannel.sendMessage("Welcome " + member.getAsMention() + " to **" + event.getGuild().getName() + "**, Please " +
-                "make sure to read over " + rulesChannel.getAsMention() +
-                " ... not knowing the rules for this Discord guild will not be an excuse when a rule is broken!").queue();
+        // Discord now handles this, YAY!
+        // But let's keep it here for safe keeping
+//        TextChannel welcomeChannel = BotHandler.getINSTANCE().getWelcomeChannel(); // TEMP for testing
+//        TextChannel rulesChannel = BotHandler.getINSTANCE().getRulesChannel(); // TEMP for testing
+//
+//
+//        welcomeChannel.sendMessage("Welcome " + member.getAsMention() + " to **" + event.getGuild().getName() + "**, Please " +
+//                "make sure to read over " + rulesChannel.getAsMention() +
+//                " ... not knowing the rules for this Discord guild will not be an excuse when a rule is broken!").queue();
 
         // If a user joins that was previously muted, re-add the muted role
         if (BotHandler.getINSTANCE().getMuteData().isMuted(member)) {
