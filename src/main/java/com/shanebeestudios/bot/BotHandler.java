@@ -10,6 +10,7 @@ import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.util.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -24,42 +25,40 @@ import java.util.List;
 public class BotHandler {
 
     private static BotHandler INSTANCE;
-    private static JDA bot;
-    private static String BOT_NAME = "Bot Loading...";
-    private final String server, bot_c, admin_r;
+    private final String serverID, botChannelID, adminRoleID;
+    private String botName;
+    private final JDA bot;
 
     // Channels
     private TextChannel botChannel;
 
-    // Rules
+    // Roles
     private Role adminRole;
 
-    BotHandler(String token, String server, String bot_c, String admin_r) {
+    BotHandler(String token, String serverID, String botChannelID, String adminRoleID) {
         INSTANCE = this;
+        this.botName = "Bot Loading";
         Logger.info("Starting server...");
-        this.server = server;
-        this.bot_c = bot_c;
-        this.admin_r = admin_r;
+        this.serverID = serverID;
+        this.botChannelID = botChannelID;
+        this.adminRoleID = adminRoleID;
 
         Logger.info("Logging in bot");
         try {
-            bot = JDABuilder
-                    .createDefault(token)
+            this.bot = JDABuilder.createDefault(token)
                     .enableIntents(EnumSet.allOf(GatewayIntent.class))
-                    .addEventListeners(new JoinListener())
                     .addEventListeners(registerListeners())
                     .build().awaitReady();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        BOT_NAME = bot.getSelfUser().getName();
-        Logger.info("Successfully logged in bot: <blue>" + BOT_NAME);
+        this.botName = this.bot.getSelfUser().getName();
+        Logger.info("Successfully logged in bot: <blue>" + this.botName);
 
-        Guild guild = bot.getGuildById(server);
+        Guild guild = this.bot.getGuildById(serverID);
         if (guild != null) registerCommands(guild);
 
-
-        new ConsoleThread(bot.getSelfUser().getName()).start();
+        new ConsoleThread(this.bot.getSelfUser().getName()).start();
 
         Logger.info("Bot server loaded!");
     }
@@ -68,47 +67,93 @@ public class BotHandler {
         List<ListenerAdapter> listeners = new ArrayList<>();
         listeners.add(new Purge());
         listeners.add(new Say());
-        listeners.add(new Release());
-        listeners.add(new Playing());
+        listeners.add(new Release(this));
+        listeners.add(new Playing(this));
         listeners.add(new MessageListener(this));
+        listeners.add(new JoinListener());
         return listeners.toArray(new ListenerAdapter[0]);
     }
 
-    public void registerCommands(@NotNull Guild guild) {
-        Playing.registerCommand(guild);
-        Purge.registerCommand(guild);
-        Release.registerCommand(guild);
-        Say.registerCommand(guild);
+    private void registerCommands(@NotNull Guild guild) {
+        EnumSet<Permission> permissions = getAdminRole().getPermissions();
+        Playing.registerCommand(guild, permissions);
+        Purge.registerCommand(guild, permissions);
+        Release.registerCommand(guild, permissions);
+        Say.registerCommand(guild, permissions);
     }
 
-    public static JDA getBot() {
-        return bot;
+    /**
+     * Get instance of the bot
+     *
+     * @return Instance of bot
+     */
+    public JDA getBot() {
+        return this.bot;
     }
 
-    public static String getBotName() {
-        return BOT_NAME;
+    /**
+     * Get name of bot
+     *
+     * @return Name of bot
+     */
+    public String getBotName() {
+        return this.botName;
     }
 
+    /**
+     * Get bot channel
+     * <p>This is the channel where the bot will log messages</p>
+     *
+     * @return Bot channel
+     */
     public TextChannel getBotChannel() {
-        if (botChannel == null) {
-            botChannel = bot.getTextChannelById(bot_c);
+        if (this.botChannel == null) {
+            this.botChannel = this.bot.getTextChannelById(this.botChannelID);
         }
-        return botChannel;
+        return this.botChannel;
     }
 
+    /**
+     * Get admin role
+     *
+     * @return Admin role
+     */
     public Role getAdminRole() {
-        if (adminRole == null) {
-            adminRole = bot.getRoleById(admin_r);
+        if (this.adminRole == null) {
+            this.adminRole = this.bot.getRoleById(this.adminRoleID);
         }
-        return adminRole;
+        return this.adminRole;
     }
 
+    /**
+     * Get server ID
+     *
+     * @return Server ID
+     */
     public String getServerID() {
-        return server;
+        return this.serverID;
     }
 
+    /**
+     * Get instance of BotHandler
+     *
+     * @return Instance of BotHandler
+     */
     public static BotHandler getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * Shutdown the bot
+     */
+    public void shutdown() {
+        this.bot.shutdown();
+        try {
+            this.bot.awaitShutdown();
+            Logger.info("Successfully shutdown bot!");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

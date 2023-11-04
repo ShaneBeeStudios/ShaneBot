@@ -5,6 +5,7 @@ import com.shanebeestudios.bot.BotHandler;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@SuppressWarnings("unused")
 public class Logger {
 
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -55,7 +56,7 @@ public class Logger {
         Thread thread = Thread.currentThread();
         String n = thread.getName();
         if (n.contains("JDA MainWS") || n.contains("main") || n.contains("Bot Loading")) {
-            thread.setName(BotHandler.getBotName());
+            thread.setName(BotHandler.getInstance().getBotName());
         }
         return thread.getName();
     }

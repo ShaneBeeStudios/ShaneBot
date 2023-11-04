@@ -17,8 +17,9 @@ public class MemberUtil {
         muted.getGuild().timeoutFor(muted, time, timeFrame).queue();
 
         // Send message to bot channel
-        TextChannel botChannel = BotHandler.getInstance().getBotChannel();
-        String botName = BotHandler.getBotName();
+        BotHandler botHandler = BotHandler.getInstance();
+        TextChannel botChannel = botHandler.getBotChannel();
+        String botName = botHandler.getBotName();
 
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("-- MUTE TIME --")
@@ -48,8 +49,9 @@ public class MemberUtil {
     }
 
     public static void mentionRemovalMessage(Member member, TextChannel channel) {
-        TextChannel botChannel = BotHandler.getInstance().getBotChannel();
-        String botName = BotHandler.getBotName();
+        BotHandler botHandler = BotHandler.getInstance();
+        TextChannel botChannel = botHandler.getBotChannel();
+        String botName = botHandler.getBotName();
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("-- MENTION REMOVAL --")
                 .setColor(Color.MAGENTA)

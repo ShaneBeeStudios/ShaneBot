@@ -3,6 +3,7 @@ package com.shanebeestudios.bot.command;
 import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.util.Util;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,9 +13,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.awt.*;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Random;
 
 public class Release extends ListenerAdapter {
+
+    private final BotHandler botHandler;
+
+    public Release(BotHandler botHandler) {
+        this.botHandler = botHandler;
+    }
+
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -36,20 +45,20 @@ public class Release extends ListenerAdapter {
                 .setTitle("**" + plugin + " - " + version + "**")
                 .setDescription(desc)
                 .addField("**Download:**", link, false)
-                .setFooter(BotHandler.getBotName(), BotHandler.getBot().getSelfUser().getAvatarUrl())
+                .setFooter(this.botHandler.getBotName(), this.botHandler.getBot().getSelfUser().getAvatarUrl())
                 .setTimestamp(new Date(System.currentTimeMillis()).toInstant()).build();
 
         event.getChannel().sendMessageEmbeds(pluginRelease).complete();
         event.getHook().deleteOriginal().queue();
     }
 
-    public static void registerCommand(Guild guild) {
+    public static void registerCommand(Guild guild, EnumSet<Permission> permissions) {
         guild.upsertCommand("release", "Release a plugin")
                 .addOption(OptionType.STRING, "plugin", "Name of plugin", true)
                 .addOption(OptionType.STRING, "version", "Version of release", true)
                 .addOption(OptionType.STRING, "link", "link for release", true)
                 .addOption(OptionType.STRING, "description", "Description of release", true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(BotHandler.getInstance().getAdminRole().getPermissions()))
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
                 .queue();
     }
 

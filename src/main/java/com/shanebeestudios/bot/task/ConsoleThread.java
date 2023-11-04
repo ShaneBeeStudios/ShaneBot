@@ -1,5 +1,6 @@
 package com.shanebeestudios.bot.task;
 
+import com.shanebeestudios.bot.BotHandler;
 import com.shanebeestudios.bot.util.Logger;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ public class ConsoleThread extends Thread {
 
     private final String version;
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public ConsoleThread(String name) {
         super(name);
         String version1 = "<unknown>";
@@ -26,16 +28,17 @@ public class ConsoleThread extends Thread {
 
     @Override
     public void run() {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
-        while (sc.hasNextLine()) {
-            String message = sc.next();
+        while (scanner.hasNextLine()) {
+            String message = scanner.next();
             switch (message.toLowerCase(Locale.ROOT)) {
                 case "help":
                     Logger.info("Available commands:<blue> stop, version");
                     break;
                 case "stop":
                     Logger.info("Stopping server!");
+                    BotHandler.getInstance().shutdown();
                     System.exit(0);
                     break;
                 case "version":

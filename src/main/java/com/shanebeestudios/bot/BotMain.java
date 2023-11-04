@@ -52,11 +52,11 @@ public class BotMain {
         }
 
         String token = (String) options.valueOf("token");
-        String server = (String) options.valueOf("server");
-        String botChannel = (String) options.valueOf("bot-c");
-        String adminRole = (String) options.valueOf("admin-r");
+        String serverID = (String) options.valueOf("server");
+        String botChannelID = (String) options.valueOf("bot-c");
+        String adminRoleID = (String) options.valueOf("admin-r");
 
-        botHandler = new BotHandler(token, server, botChannel, adminRole);
+        botHandler = new BotHandler(token, serverID, botChannelID, adminRoleID);
     }
 
 }

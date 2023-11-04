@@ -57,7 +57,7 @@ public class MessageListener extends ListenerAdapter {
         if (mentions.containsKey(member)) {
             tag += mentions.get(member);
             if (tag > 2) {
-                Member bot = botHandler.getBotChannel().getGuild().getMemberById(BotHandler.getBot().getSelfUser().getId());
+                Member bot = botHandler.getBotChannel().getGuild().getMemberById(this.botHandler.getBot().getSelfUser().getId());
                 MemberUtil.muteMember(member, 24, TimeUnit.HOURS, "Abusing mentions", bot);
                 mentions.remove(member);
                 return;
