@@ -4,7 +4,6 @@ import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -12,14 +11,11 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.EnumSet;
 
-public class CommandActivity extends ListenerAdapter {
+public class CommandActivity extends CommandBase {
 
-    private final BotHandler botHandler;
-
-    public CommandActivity(BotHandler botHandler, EnumSet<Permission> permissions) {
-        this.botHandler = botHandler;
-        botHandler.getBot().addEventListener(this);
-        botHandler.getGuild().upsertCommand("activity", "Set the activity of the bot")
+    public CommandActivity(BotHandler botHandler, Permission permission) {
+        super(botHandler, permission, "Activity", "Set the activity of the bot");
+        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
                 .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
                         .addChoice("playing", 0)
                         .addChoice("streaming", 1)
@@ -29,7 +25,7 @@ public class CommandActivity extends ListenerAdapter {
                         .addChoice("competing", 5))
                 .addOption(OptionType.STRING, "what", "What to play", true)
                 .addOption(OptionType.STRING, "stream", "Link if streaming")
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
                 .queue();
     }
 

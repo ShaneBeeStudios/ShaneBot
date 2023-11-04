@@ -1,6 +1,8 @@
 package com.shanebeestudios.bot;
 
 import com.shanebeestudios.bot.command.CommandActivity;
+import com.shanebeestudios.bot.command.CommandBase;
+import com.shanebeestudios.bot.command.CommandCommands;
 import com.shanebeestudios.bot.command.CommandPurge;
 import com.shanebeestudios.bot.command.CommandRelease;
 import com.shanebeestudios.bot.command.CommandSay;
@@ -28,6 +30,7 @@ public class BotHandler {
     private String botName;
     private final JDA bot;
     private final Guild guild;
+    private final List<CommandBase> commands = new ArrayList<>();
 
     // Channels
     private TextChannel botChannel;
@@ -71,11 +74,11 @@ public class BotHandler {
     }
 
     private void registerCommands() {
-        EnumSet<Permission> permissions = getAdminRole().getPermissions();
-        new CommandActivity(this, permissions);
-        new CommandPurge(this, permissions);
-        new CommandRelease(this, permissions);
-        new CommandSay(this, permissions);
+        commands.add(new CommandActivity(this, Permission.MESSAGE_MANAGE));
+        commands.add(new CommandCommands(this, Permission.VIEW_CHANNEL));
+        commands.add(new CommandPurge(this, Permission.MESSAGE_MANAGE));
+        commands.add(new CommandRelease(this, Permission.ADMINISTRATOR));
+        commands.add(new CommandSay(this, Permission.MESSAGE_MANAGE));
     }
 
     /**
@@ -94,6 +97,15 @@ public class BotHandler {
      */
     public Guild getGuild() {
         return this.guild;
+    }
+
+    /**
+     * Get registered commands
+     *
+     * @return Registered commands
+     */
+    public List<CommandBase> getCommands() {
+        return commands;
     }
 
     /**

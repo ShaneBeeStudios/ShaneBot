@@ -5,20 +5,19 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class CommandPurge extends ListenerAdapter {
+public class CommandPurge extends CommandBase {
 
-    public CommandPurge(BotHandler botHandler, EnumSet<Permission> permissions) {
-        botHandler.getBot().addEventListener(this);
-        botHandler.getGuild().upsertCommand("purge", "purge messages")
+    public CommandPurge(BotHandler botHandler, Permission permission) {
+        super(botHandler, permission, "Purge", "Purge messages in a channel");
+        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
                 .addOption(OptionType.INTEGER, "amount", "amount of messages", true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
                 .queue();
     }
 

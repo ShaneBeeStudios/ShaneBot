@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
@@ -15,19 +14,16 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Random;
 
-public class CommandRelease extends ListenerAdapter {
+public class CommandRelease extends CommandBase {
 
-    private final BotHandler botHandler;
-
-    public CommandRelease(BotHandler botHandler, EnumSet<Permission> permissions) {
-        this.botHandler = botHandler;
-        botHandler.getBot().addEventListener(this);
-        botHandler.getGuild().upsertCommand("release", "Release a plugin")
+    public CommandRelease(BotHandler botHandler, Permission permission) {
+        super(botHandler, permission, "Release", "Publish a release");
+        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
                 .addOption(OptionType.STRING, "plugin", "Name of plugin", true)
                 .addOption(OptionType.STRING, "version", "Version of release", true)
                 .addOption(OptionType.STRING, "link", "link for release", true)
                 .addOption(OptionType.STRING, "description", "Description of release", true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
                 .queue();
     }
 
