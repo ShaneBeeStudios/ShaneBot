@@ -1,5 +1,6 @@
 package com.shanebeestudios.bot;
 
+import com.shanebeestudios.bot.command.Playing;
 import com.shanebeestudios.bot.command.Purge;
 import com.shanebeestudios.bot.command.Release;
 import com.shanebeestudios.bot.command.Say;
@@ -68,11 +69,13 @@ public class BotHandler {
         listeners.add(new Purge());
         listeners.add(new Say());
         listeners.add(new Release());
+        listeners.add(new Playing());
         listeners.add(new MessageListener(this));
         return listeners.toArray(new ListenerAdapter[0]);
     }
 
     public void registerCommands(@NotNull Guild guild) {
+        Playing.registerCommand(guild);
         Purge.registerCommand(guild);
         Release.registerCommand(guild);
         Say.registerCommand(guild);
