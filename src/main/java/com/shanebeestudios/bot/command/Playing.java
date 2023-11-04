@@ -38,7 +38,7 @@ public class Playing extends ListenerAdapter {
 
     public static void registerCommand(Guild guild) {
         guild.upsertCommand("activity", "Set the activity of the bot")
-                .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true, true)
+                .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
                         .addChoice("playing", 0)
                         .addChoice("streaming", 1)
                         .addChoice("listening", 2)
