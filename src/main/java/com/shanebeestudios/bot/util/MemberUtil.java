@@ -12,9 +12,19 @@ import java.util.concurrent.TimeUnit;
 
 public class MemberUtil {
 
-    public static void muteMember(Member muted, long time, TimeUnit timeFrame, String reason, @Nullable Member mod) {
+    /**
+     * Timeout a member
+     * <p>This will also log to the bot channel, log to console and send a DM to the user</p>
+     *
+     * @param muted    Member to be timedout
+     * @param time     Time to timeout for
+     * @param timeUnit TimeUnit to timeout for
+     * @param reason   Reason for the timeout
+     * @param mod      Moderator who performed the timeout
+     */
+    public static void timeoutMember(Member muted, long time, TimeUnit timeUnit, String reason, @Nullable Member mod) {
         // Mute member
-        muted.getGuild().timeoutFor(muted, time, timeFrame).queue();
+        muted.getGuild().timeoutFor(muted, time, timeUnit).queue();
 
         // Send message to bot channel
         BotHandler botHandler = BotHandler.getInstance();
@@ -22,11 +32,11 @@ public class MemberUtil {
         String botName = botHandler.getBotName();
 
         MessageEmbed embed = new EmbedBuilder()
-                .setTitle("-- MUTE TIME --")
-                .setColor(Color.ORANGE)
+                .setTitle("-- TIMEOUT TIME --")
+                .setColor(Color.RED)
                 .setAuthor(botName, null, Util.IMAGE_URL)
                 .addField("Muted:", muted.getEffectiveName() + "(" + muted.getId() + ")", false)
-                .addField("Time:", time + " " + timeFrame, false)
+                .addField("Time:", time + " " + timeUnit, false)
                 .addField("Reason:", reason, false)
                 .addField("Moderator:", mod != null ? mod.getEffectiveName() : "<none>", false)
                 .build();
@@ -41,10 +51,10 @@ public class MemberUtil {
         directMessage(muted, toUser);
 
         // Log to console
-        Logger.info("MUTE TIME:");
+        Logger.info("TIMEOUT TIME:");
         Logger.info(" - Muting: <blue>" + muted.getEffectiveName());
         Logger.info(" - Reason: <blue>" + reason);
-        Logger.info(" - Time: <blue>" + time + " " + timeFrame);
+        Logger.info(" - Time: <blue>" + time + " " + timeUnit);
         Logger.info(" - Mod: <blue>" + (mod != null ? mod.getEffectiveName() : "<none>"));
     }
 
@@ -54,7 +64,7 @@ public class MemberUtil {
         String botName = botHandler.getBotName();
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("-- MENTION REMOVAL --")
-                .setColor(Color.MAGENTA)
+                .setColor(Color.ORANGE)
                 .setAuthor(botName, null, Util.IMAGE_URL)
                 .addField("Tagger:", member.getEffectiveName(), false)
                 .addField("Channel:", channel.getName(), false)
@@ -67,7 +77,7 @@ public class MemberUtil {
         Logger.info(" - Channel: <purple>" + channel.getName());
     }
 
-    public static void directMessage(Member member, MessageEmbed message) {
+    private static void directMessage(Member member, MessageEmbed message) {
         member.getUser().openPrivateChannel().queue(s -> s.sendMessageEmbeds(message).queue());
     }
 

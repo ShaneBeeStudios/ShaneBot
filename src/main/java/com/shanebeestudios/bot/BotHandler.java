@@ -3,6 +3,7 @@ package com.shanebeestudios.bot;
 import com.shanebeestudios.bot.command.CommandActivity;
 import com.shanebeestudios.bot.command.CommandBase;
 import com.shanebeestudios.bot.command.CommandCommands;
+import com.shanebeestudios.bot.command.CommandMute;
 import com.shanebeestudios.bot.command.CommandPurge;
 import com.shanebeestudios.bot.command.CommandRelease;
 import com.shanebeestudios.bot.command.CommandSay;
@@ -76,6 +77,7 @@ public class BotHandler {
     private void registerCommands() {
         commands.add(new CommandActivity(this, Permission.MESSAGE_MANAGE));
         commands.add(new CommandCommands(this, Permission.VIEW_CHANNEL));
+        commands.add(new CommandMute(this, Permission.MODERATE_MEMBERS));
         commands.add(new CommandPurge(this, Permission.MESSAGE_MANAGE));
         commands.add(new CommandRelease(this, Permission.ADMINISTRATOR));
         commands.add(new CommandSay(this, Permission.MESSAGE_MANAGE));
