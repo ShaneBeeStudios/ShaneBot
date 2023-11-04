@@ -1,9 +1,9 @@
 package com.shanebeestudios.bot;
 
-import com.shanebeestudios.bot.command.Playing;
-import com.shanebeestudios.bot.command.Purge;
-import com.shanebeestudios.bot.command.Release;
-import com.shanebeestudios.bot.command.Say;
+import com.shanebeestudios.bot.command.CommandActivity;
+import com.shanebeestudios.bot.command.CommandPurge;
+import com.shanebeestudios.bot.command.CommandRelease;
+import com.shanebeestudios.bot.command.CommandSay;
 import com.shanebeestudios.bot.listeners.JoinListener;
 import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ConsoleThread;
@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -28,6 +27,7 @@ public class BotHandler {
     private final String serverID, botChannelID, adminRoleID;
     private String botName;
     private final JDA bot;
+    private final Guild guild;
 
     // Channels
     private TextChannel botChannel;
@@ -55,8 +55,8 @@ public class BotHandler {
         this.botName = this.bot.getSelfUser().getName();
         Logger.info("Successfully logged in bot: <blue>" + this.botName);
 
-        Guild guild = this.bot.getGuildById(serverID);
-        if (guild != null) registerCommands(guild);
+        this.guild = this.bot.getGuildById(serverID);
+        registerCommands();
 
         new ConsoleThread(this.bot.getSelfUser().getName()).start();
 
@@ -65,21 +65,17 @@ public class BotHandler {
 
     private Object[] registerListeners() {
         List<ListenerAdapter> listeners = new ArrayList<>();
-        listeners.add(new Purge());
-        listeners.add(new Say());
-        listeners.add(new Release(this));
-        listeners.add(new Playing(this));
         listeners.add(new MessageListener(this));
         listeners.add(new JoinListener());
         return listeners.toArray(new ListenerAdapter[0]);
     }
 
-    private void registerCommands(@NotNull Guild guild) {
+    private void registerCommands() {
         EnumSet<Permission> permissions = getAdminRole().getPermissions();
-        Playing.registerCommand(guild, permissions);
-        Purge.registerCommand(guild, permissions);
-        Release.registerCommand(guild, permissions);
-        Say.registerCommand(guild, permissions);
+        new CommandActivity(this, permissions);
+        new CommandPurge(this, permissions);
+        new CommandRelease(this, permissions);
+        new CommandSay(this, permissions);
     }
 
     /**
@@ -89,6 +85,15 @@ public class BotHandler {
      */
     public JDA getBot() {
         return this.bot;
+    }
+
+    /**
+     * Get the guild running this bot
+     *
+     * @return Guild running this bot
+     */
+    public Guild getGuild() {
+        return this.guild;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.shanebeestudios.bot.command;
 
+import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,7 +12,15 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import java.util.EnumSet;
 import java.util.List;
 
-public class Purge extends ListenerAdapter {
+public class CommandPurge extends ListenerAdapter {
+
+    public CommandPurge(BotHandler botHandler, EnumSet<Permission> permissions) {
+        botHandler.getBot().addEventListener(this);
+        botHandler.getGuild().upsertCommand("purge", "purge messages")
+                .addOption(OptionType.INTEGER, "amount", "amount of messages", true)
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
+                .queue();
+    }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
@@ -26,13 +34,6 @@ public class Purge extends ListenerAdapter {
         channel.purgeMessages(messages);
 
         event.getHook().deleteOriginal().queue();
-    }
-
-    public static void registerCommand(Guild guild, EnumSet<Permission> permissions) {
-        guild.upsertCommand("purge", "purge messages")
-                .addOption(OptionType.INTEGER, "amount", "amount of messages", true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
-                .queue();
     }
 
 }

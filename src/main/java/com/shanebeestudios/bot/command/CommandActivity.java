@@ -3,7 +3,6 @@ package com.shanebeestudios.bot.command;
 import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -13,12 +12,25 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.EnumSet;
 
-public class Playing extends ListenerAdapter {
+public class CommandActivity extends ListenerAdapter {
 
     private final BotHandler botHandler;
 
-    public Playing(BotHandler botHandler) {
+    public CommandActivity(BotHandler botHandler, EnumSet<Permission> permissions) {
         this.botHandler = botHandler;
+        botHandler.getBot().addEventListener(this);
+        botHandler.getGuild().upsertCommand("activity", "Set the activity of the bot")
+                .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
+                        .addChoice("playing", 0)
+                        .addChoice("streaming", 1)
+                        .addChoice("listening", 2)
+                        .addChoice("watching", 3)
+                        .addChoice("custom", 4)
+                        .addChoice("competing", 5))
+                .addOption(OptionType.STRING, "what", "What to play", true)
+                .addOption(OptionType.STRING, "stream", "Link if streaming")
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
+                .queue();
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -44,21 +56,6 @@ public class Playing extends ListenerAdapter {
         this.botHandler.getBot().getPresence().setActivity(activity);
 
         event.getHook().deleteOriginal().queue();
-    }
-
-    public static void registerCommand(Guild guild, EnumSet<Permission> permissions) {
-        guild.upsertCommand("activity", "Set the activity of the bot")
-                .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
-                        .addChoice("playing", 0)
-                        .addChoice("streaming", 1)
-                        .addChoice("listening", 2)
-                        .addChoice("watching", 3)
-                        .addChoice("custom", 4)
-                        .addChoice("competing", 5))
-                .addOption(OptionType.STRING, "what", "What to play", true)
-                .addOption(OptionType.STRING, "stream", "Link if streaming")
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(permissions))
-                .queue();
     }
 
 }
