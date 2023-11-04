@@ -1,33 +1,37 @@
 package com.shanebeestudios.bot.command;
 
-import com.shanebeestudios.bot.util.Util;
+import com.shanebeestudios.bot.BotHandler;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.List;
 
-public class Purge extends Command {
+public class Purge extends ListenerAdapter {
 
-    public Purge(Permission permission) {
-        super(permission);
-        this.description = "Purge up to 100 messages in a channel";
-        this.usage = "!purge <number>";
+    @SuppressWarnings("DataFlowIssue")
+    @Override
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        if (!event.getName().equals("purge")) return;
+        event.deferReply().complete();
+
+        int amount = event.getOption("amount").getAsInt();
+        MessageChannelUnion channel = event.getChannel();
+        List<Message> messages = channel.getHistory().retrievePast(amount + 1).complete();
+        channel.purgeMessages(messages);
+
+        event.getHook().deleteOriginal().queue();
     }
 
-    @Override
-    public boolean run() {
-        if (args.length == 0) {
-            channel.sendMessage("You need to specify a number!").queue();
-        } else {
-            int amount = Util.getInt(args[0]);
-            List<Message> messages = channel
-                    .getHistory()
-                    .retrievePast(amount + 1)
-                    .complete();
-            if (messages.size() > 1) {
-                channel.deleteMessages(messages).complete();
-            }
-        }
-        return true;
+    public static void registerCommand(Guild guild) {
+        guild.upsertCommand("purge", "purge messages")
+                .addOption(OptionType.INTEGER, "amount", "amount of messages", true)
+                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(BotHandler.getInstance().getAdminRole().getPermissions()))
+                .queue();
     }
 
 }

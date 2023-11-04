@@ -6,24 +6,24 @@ plugins {
 }
 
 compileJava {
-    sourceCompatibility = '8'
-    targetCompatibility = '8'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
     options.encoding = 'UTF-8'
 }
 
-// SkBee version
-version = '1.1.0'
+// ShaneBot version
+version = '2.0.0'
+def jdaVersion = '5.0.0-beta.17'
 
 repositories {
     mavenCentral()
-    mavenLocal()
 
     // jcenter
-    maven { url 'https://jcenter.bintray.com'}
+    maven { url 'https://jcenter.bintray.com' }
 }
 
 dependencies {
-    implementation(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_182')
+    implementation("net.dv8tion:JDA:$jdaVersion")
     implementation(group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha1')
     implementation(group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.0-alpha1')
     implementation(group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '5.0.4')
@@ -47,10 +47,4 @@ processResources {
 
 shadowJar {
     archiveClassifier = null
-    relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
-    relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
-    relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
-    relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
-    relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
-    exclude('META-INF/**', 'LICENSE')
 }

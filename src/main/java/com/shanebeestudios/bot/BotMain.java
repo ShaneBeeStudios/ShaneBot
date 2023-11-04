@@ -15,26 +15,13 @@ public class BotMain {
 
         parser.accepts("help", "Shows help and exits");
         parser.accepts("token", "The token for the bot")
-                .withRequiredArg()
-                .ofType(String.class);
+                .withRequiredArg().ofType(String.class);
         parser.accepts("server", "ID of server")
-                .withRequiredArg()
-                .ofType(String.class);
-        parser.accepts("welcome-c", "ID of WELCOME channel")
-                .withRequiredArg()
-                .ofType(String.class);
-        parser.accepts("rules-c", "ID of RULES channel")
-                .withRequiredArg()
-                .ofType(String.class);
+                .withRequiredArg().ofType(String.class);
         parser.accepts("bot-c", "ID of bot/punishment channel")
-                .withRequiredArg()
-                .ofType(String.class);
-        parser.accepts("muted-r", "ID of MUTED role")
-                .withRequiredArg()
-                .ofType(String.class);
+                .withRequiredArg().ofType(String.class);
         parser.accepts("admin-r", "ID of ADMIN role")
-                .withRequiredArg()
-                .ofType(String.class);
+                .withRequiredArg().ofType(String.class);
 
         OptionSet options = parser.parse(args);
 
@@ -55,20 +42,8 @@ public class BotMain {
             Logger.error("No server ID specified, shutting down...");
             System.exit(1);
         }
-        if (!options.has("welcome-c")) {
-            Logger.error("No welcome channel ID specified, shutting down...");
-            System.exit(1);
-        }
-        if (!options.has("rules-c")) {
-            Logger.error("No rules channel ID specified, shutting down...");
-            System.exit(1);
-        }
         if (!options.has("bot-c")) {
             Logger.error("No bot channel ID specified, shutting down...");
-            System.exit(1);
-        }
-        if (!options.has("muted-r")) {
-            Logger.error("No muted role ID specified, shutting down...");
             System.exit(1);
         }
         if (!options.has("admin-r")) {
@@ -78,13 +53,10 @@ public class BotMain {
 
         String token = (String) options.valueOf("token");
         String server = (String) options.valueOf("server");
-        String welcomeC = (String) options.valueOf("welcome-c");
-        String rulesC = (String) options.valueOf("rules-c");
-        String botC = (String) options.valueOf("bot-c");
-        String mutedR = (String) options.valueOf("muted-r");
-        String adminR = (String) options.valueOf("admin-r");
+        String botChannel = (String) options.valueOf("bot-c");
+        String adminRole = (String) options.valueOf("admin-r");
 
-        botHandler = new BotHandler(token, server, welcomeC, rulesC, botC, mutedR, adminR);
+        botHandler = new BotHandler(token, server, botChannel, adminRole);
     }
 
 }

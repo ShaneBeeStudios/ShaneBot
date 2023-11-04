@@ -28,7 +28,7 @@ public class ConsoleThread extends Thread {
     public void run() {
         Scanner sc = new Scanner(System.in);
 
-        while(sc.hasNextLine()) {
+        while (sc.hasNextLine()) {
             String message = sc.next();
             switch (message.toLowerCase(Locale.ROOT)) {
                 case "help":

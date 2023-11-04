@@ -1,82 +1,81 @@
 package com.shanebeestudios.bot;
 
-import com.shanebeestudios.bot.command.*;
-import com.shanebeestudios.bot.command.Command.Permission;
-import com.shanebeestudios.bot.data.MuteData;
+import com.shanebeestudios.bot.command.Purge;
+import com.shanebeestudios.bot.command.Release;
+import com.shanebeestudios.bot.command.Say;
 import com.shanebeestudios.bot.listeners.JoinListener;
 import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ConsoleThread;
-import com.shanebeestudios.bot.task.MuteTimer;
 import com.shanebeestudios.bot.util.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.jetbrains.annotations.NotNull;
 
-import javax.security.auth.login.LoginException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class BotHandler {
 
     private static BotHandler INSTANCE;
     private static JDA bot;
     private static String BOT_NAME = "Bot Loading...";
-    private final Map<String, Command> commands = new HashMap<>();
-    private final String server, welcome_c, rules_c, bot_c, muted_r, admin_r;
-    private final MuteData muteData;
+    private final String server, bot_c, admin_r;
 
     // Channels
-    private TextChannel WELCOME_CHANNEL;
-    private TextChannel RULES_CHANNEL;
-    private TextChannel BOT_CHANNEL;
+    private TextChannel botChannel;
 
     // Rules
-    private Role MUTED_ROLE;
-    private Role ADMIN_ROLE;
+    private Role adminRole;
 
-    BotHandler(String token, String server, String welcome_c, String rules_c, String bot_c, String muted_r, String admin_r) {
+    BotHandler(String token, String server, String bot_c, String admin_r) {
         INSTANCE = this;
-        this.server = server;
-        this.welcome_c = welcome_c;
-        this.rules_c = rules_c;
-        this.bot_c = bot_c;
-        this.muted_r = muted_r;
-        this.admin_r = admin_r;
         Logger.info("Starting server...");
+        this.server = server;
+        this.bot_c = bot_c;
+        this.admin_r = admin_r;
 
+        Logger.info("Logging in bot");
         try {
-            Logger.info("Logging in bot");
             bot = JDABuilder
-                    .createDefault(token, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
-                    .addEventListeners(new MessageListener(this, this.commands))
+                    .createDefault(token)
+                    .enableIntents(EnumSet.allOf(GatewayIntent.class))
                     .addEventListeners(new JoinListener())
-                    .build();
-            BOT_NAME = bot.getSelfUser().getName();
-            Logger.info("Successfully logged in bot: <blue>" + bot.getSelfUser().getName());
-        } catch (LoginException e) {
-            e.printStackTrace();
+                    .addEventListeners(registerListeners())
+                    .build().awaitReady();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        registerCommands();
-        this.muteData = new MuteData();
-        new MuteTimer(this, 60);
+        BOT_NAME = bot.getSelfUser().getName();
+        Logger.info("Successfully logged in bot: <blue>" + BOT_NAME);
+
+        Guild guild = bot.getGuildById(server);
+        if (guild != null) registerCommands(guild);
+
+
         new ConsoleThread(bot.getSelfUser().getName()).start();
 
         Logger.info("Bot server loaded!");
     }
 
-    private void registerCommands() {
-        commands.put("purge", new Purge(Permission.ADMIN));
-        commands.put("mute", new Mute(Permission.ADMIN));
-        commands.put("unmute", new UnMute(Permission.ADMIN));
-        commands.put("ban", new Ban(Permission.ADMIN));
-        commands.put("play", new Playing(Permission.OWNER));
-        commands.put("release", new Release(Permission.ADMIN));
-        commands.put("say", new Say(Permission.OWNER));
-        commands.put("commands", new Commands(Permission.NONE, this));
-        commands.put("test", new Test(Permission.OWNER));
-        Logger.info("Successfully registered " + commands.size() + " command(s)!");
+    private Object[] registerListeners() {
+        List<ListenerAdapter> listeners = new ArrayList<>();
+        listeners.add(new Purge());
+        listeners.add(new Say());
+        listeners.add(new Release());
+        listeners.add(new MessageListener(this));
+        return listeners.toArray(new ListenerAdapter[0]);
+    }
+
+    public void registerCommands(@NotNull Guild guild) {
+        Purge.registerCommand(guild);
+        Release.registerCommand(guild);
+        Say.registerCommand(guild);
     }
 
     public static JDA getBot() {
@@ -88,53 +87,24 @@ public class BotHandler {
     }
 
     public TextChannel getBotChannel() {
-        if (BOT_CHANNEL == null) {
-            BOT_CHANNEL = bot.getTextChannelById(bot_c);
+        if (botChannel == null) {
+            botChannel = bot.getTextChannelById(bot_c);
         }
-        return BOT_CHANNEL;
-    }
-
-    public TextChannel getWelcomeChannel() {
-        if (WELCOME_CHANNEL == null) {
-            WELCOME_CHANNEL = bot.getTextChannelById(welcome_c);
-        }
-        return WELCOME_CHANNEL;
-    }
-
-    public TextChannel getRulesChannel() {
-        if (RULES_CHANNEL == null) {
-            RULES_CHANNEL = bot.getTextChannelById(rules_c);
-        }
-        return RULES_CHANNEL;
-    }
-
-    public Role getMutedRole() {
-        if (MUTED_ROLE == null) {
-            MUTED_ROLE = bot.getRoleById(muted_r);
-        }
-        return MUTED_ROLE;
+        return botChannel;
     }
 
     public Role getAdminRole() {
-        if (ADMIN_ROLE == null) {
-            ADMIN_ROLE = bot.getRoleById(admin_r);
+        if (adminRole == null) {
+            adminRole = bot.getRoleById(admin_r);
         }
-        return ADMIN_ROLE;
-    }
-
-    public MuteData getMuteData() {
-        return muteData;
+        return adminRole;
     }
 
     public String getServerID() {
         return server;
     }
 
-    public Map<String, Command> getCommands() {
-        return commands;
-    }
-
-    public static BotHandler getINSTANCE() {
+    public static BotHandler getInstance() {
         return INSTANCE;
     }
 
