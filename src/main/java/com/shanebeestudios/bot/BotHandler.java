@@ -166,10 +166,9 @@ public class BotHandler {
      * Shutdown the bot
      */
     public void shutdown() {
-        this.bot.shutdown();
+        this.bot.shutdownNow();
         try {
             this.bot.awaitShutdown();
-            Logger.info("Successfully shutdown bot!");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
