@@ -9,6 +9,7 @@ import com.shanebeestudios.bot.command.CommandRelease;
 import com.shanebeestudios.bot.command.CommandSay;
 import com.shanebeestudios.bot.listeners.JoinListener;
 import com.shanebeestudios.bot.listeners.MessageListener;
+import com.shanebeestudios.bot.task.ActivityTask;
 import com.shanebeestudios.bot.task.ConsoleThread;
 import com.shanebeestudios.bot.util.Logger;
 import net.dv8tion.jda.api.JDA;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class BotHandler {
 
     private static BotHandler INSTANCE;
@@ -32,6 +34,7 @@ public class BotHandler {
     private final JDA bot;
     private final Guild guild;
     private final List<CommandBase> commands = new ArrayList<>();
+    private final ActivityTask activityTask;
 
     // Channels
     private TextChannel botChannel;
@@ -63,6 +66,7 @@ public class BotHandler {
         registerCommands();
 
         new ConsoleThread(this.bot.getSelfUser().getName()).start();
+        this.activityTask = new ActivityTask(this, 5);
 
         Logger.info("Bot server loaded!");
     }
@@ -166,6 +170,7 @@ public class BotHandler {
      * Shutdown the bot
      */
     public void shutdown() {
+        this.activityTask.cancelTimer();
         this.bot.shutdownNow();
         try {
             this.bot.awaitShutdown();
