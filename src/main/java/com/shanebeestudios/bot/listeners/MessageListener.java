@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class MessageListener extends ListenerAdapter {
@@ -20,6 +22,14 @@ public class MessageListener extends ListenerAdapter {
 
     public MessageListener(BotHandler botHandler) {
         this.botHandler = botHandler;
+
+        // Reset mentions every day
+        new Timer("timer").schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mentions.clear();
+            }
+        }, 0, TimeUnit.DAYS.toMillis(1));
     }
 
     @Override
@@ -27,8 +37,6 @@ public class MessageListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         String ID = event.getGuild().getId();
         Message message = event.getMessage();
-        String messageRaw = message.getContentRaw();
-        Member member = event.getMember();
         TextChannel channel = event.getChannel().asTextChannel();
 
         // Prevent the bot running on an unauthorized guild
@@ -48,17 +56,20 @@ public class MessageListener extends ListenerAdapter {
             message.delete().queue();
             MemberUtil.mentionRemovalMessage(tagger, channel);
             addTagCount(tagger);
-
         }
     }
 
     private void addTagCount(Member member) {
+        Logger.info("Attempting to log tag");
         int tag = 1;
         if (mentions.containsKey(member)) {
             tag += mentions.get(member);
+            Logger.info("User already in mentions: tag: " + tag);
             if (tag > 2) {
-                Member bot = botHandler.getBotChannel().getGuild().getMemberById(this.botHandler.getBot().getSelfUser().getId());
+                Member bot = (Member) this.botHandler.getBot().getSelfUser();
+                //Member bot = botHandler.getBotChannel().getGuild().getMemberById(this.botHandler.getBot().getSelfUser().getId());
                 MemberUtil.timeoutMember(member, 24, TimeUnit.HOURS, "Abusing mentions", bot);
+                Logger.info("Do we make it this far?");
                 mentions.remove(member);
                 return;
             }
