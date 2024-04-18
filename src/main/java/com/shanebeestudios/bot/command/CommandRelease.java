@@ -31,7 +31,7 @@ public class CommandRelease extends CommandBase {
         String plugin = event.getOption("plugin").getAsString();
         String version = event.getOption("version").getAsString();
         String link = event.getOption("link").getAsString();
-        String desc = event.getOption("description").getAsString();
+        String desc = event.getOption("description").getAsString().replace("\\n", "\n");
 
         Random random = new Random();
         Color color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
