@@ -46,9 +46,9 @@ public class Logger {
 
     private static void log(String message) {
         String newMessage = message
-                .replace("<reset>", RESET).replace("<black>", BLACK).replace("<red>", RED)
-                .replace("<green>", GREEN).replace("<yellow>", YELLOW).replace("<blue>", BLUE)
-                .replace("<purple>", PURPLE).replace("<cyan>", CYAN).replace("<white>", WHITE);
+            .replace("<reset>", RESET).replace("<black>", BLACK).replace("<red>", RED)
+            .replace("<green>", GREEN).replace("<yellow>", YELLOW).replace("<blue>", BLUE)
+            .replace("<purple>", PURPLE).replace("<cyan>", CYAN).replace("<white>", WHITE);
         System.out.println(newMessage + RESET);
     }
 
@@ -56,7 +56,7 @@ public class Logger {
         Thread thread = Thread.currentThread();
         String n = thread.getName();
         BotHandler instance = BotHandler.getInstance();
-        if (instance !=  null && (n.contains("JDA MainWS") || n.contains("main") || n.contains("Bot Loading"))) {
+        if (instance != null && (n.contains("JDA MainWS") || n.contains("main") || n.contains("Bot Loading"))) {
             thread.setName(instance.getBotName());
         }
         return thread.getName();
