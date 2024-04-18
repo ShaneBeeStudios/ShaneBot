@@ -25,7 +25,7 @@ public class CommandPurge extends CommandBase {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!event.getName().equals("purge")) return;
-        event.deferReply().complete();
+        event.deferReply().setEphemeral(true).complete();
 
         int amount = event.getOption("amount").getAsInt();
         MessageChannelUnion channel = event.getChannel();
