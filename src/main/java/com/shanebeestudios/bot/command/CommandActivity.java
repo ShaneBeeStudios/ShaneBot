@@ -9,31 +9,31 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.EnumSet;
+import java.util.Locale;
 
 public class CommandActivity extends CommandBase {
 
     public CommandActivity(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Activity", "Set the activity of the bot");
         botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-                .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
-                        .addChoice("playing", 0)
-                        .addChoice("streaming", 1)
-                        .addChoice("listening", 2)
-                        .addChoice("watching", 3)
-                        .addChoice("custom", 4)
-                        .addChoice("competing", 5))
-                .addOption(OptionType.STRING, "what", "What to play", true)
-                .addOption(OptionType.STRING, "stream", "Link if streaming")
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-                .queue();
+            .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
+                .addChoice("playing", 0)
+                .addChoice("streaming", 1)
+                .addChoice("listening", 2)
+                .addChoice("watching", 3)
+                .addChoice("custom", 4)
+                .addChoice("competing", 5))
+            .addOption(OptionType.STRING, "what", "What to play", true)
+            .addOption(OptionType.STRING, "stream", "Link if streaming")
+            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
+            .queue();
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!event.getName().equalsIgnoreCase("activity")) return;
-        event.deferReply().queue();
+        event.deferReply().setEphemeral(true).queue();
 
         int ac = event.getOption("activity").getAsInt();
         String what = event.getOption("what").getAsString();
@@ -51,7 +51,16 @@ public class CommandActivity extends CommandBase {
         };
         this.botHandler.getBot().getPresence().setActivity(activity);
 
-        event.getHook().deleteOriginal().queue();
+        String type = "";
+        if (activity.getType() != Activity.ActivityType.CUSTOM_STATUS) {
+            String suffix = switch (activity.getType()) {
+                default -> " ";
+                case COMPETING -> " in ";
+                case LISTENING -> " to ";
+            };
+            type = activity.getType().toString().toLowerCase(Locale.ROOT) + suffix;
+        }
+        event.getHook().editOriginal("I am now **" + type + what + "**").queue();
     }
 
 }
