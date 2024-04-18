@@ -20,7 +20,7 @@ public class CommandSay extends CommandBase {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!event.getName().equalsIgnoreCase("say")) return;
-        event.deferReply().queue();
+        event.deferReply().setEphemeral(true).queue();
         String message = event.getOption("message").getAsString();
         event.getChannel().sendMessage(message).complete();
         event.getHook().deleteOriginal().queue();
