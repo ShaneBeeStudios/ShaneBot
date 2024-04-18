@@ -16,25 +16,24 @@ public class CommandCommands extends CommandBase {
     public CommandCommands(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Commands", "See a list of all commands");
         botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-                .queue();
+            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
+            .queue();
     }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (!event.getName().equalsIgnoreCase("commands")) return;
-        event.deferReply().queue();
         Member member = event.getMember();
         if (member == null) return;
 
         String botAvatar = botHandler.getBot().getSelfUser().getAvatarUrl();
         String botName = botHandler.getBotName();
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(new Color(0, 255, 197))
-                .setThumbnail(botAvatar)
-                .setAuthor("Commands", null, Util.IMAGE_URL)
-                .setTitle("**" + botName + "'s Commands**")
-                .setDescription("All available commands from " + botName + " that you have permission to use.");
+            .setColor(new Color(0, 255, 197))
+            .setThumbnail(botAvatar)
+            .setAuthor("Commands", null, Util.IMAGE_URL)
+            .setTitle("**" + botName + "'s Commands**")
+            .setDescription("All available commands from " + botName + " that you have permission to use.");
 
         botHandler.getCommands().forEach(command -> {
             if (!(command instanceof CommandCommands) && member.hasPermission(command.getPermission())) {
@@ -43,10 +42,9 @@ public class CommandCommands extends CommandBase {
         });
 
         embedBuilder
-                .setFooter(botName, botAvatar)
-                .setTimestamp(new Date(System.currentTimeMillis()).toInstant());
+            .setFooter(botName, botAvatar)
+            .setTimestamp(new Date(System.currentTimeMillis()).toInstant());
 
-        event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
-        event.getHook().deleteOriginal().queue();
+        event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
     }
 }
