@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.awt.*;
@@ -17,19 +16,16 @@ public class CommandRelease extends CommandBase {
 
     public CommandRelease(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Release", "Publish a release");
-        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
+        createCommand(command -> command
             .addOption(OptionType.STRING, "plugin", "Name of plugin", true)
             .addOption(OptionType.STRING, "version", "Version of release", true)
             .addOption(OptionType.STRING, "link", "link for release", true)
-            .addOption(OptionType.STRING, "description", "Description of release", true)
-            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-            .queue();
+            .addOption(OptionType.STRING, "description", "Description of release", true));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equalsIgnoreCase("release")) return;
+    public void onCommand(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
 
         String plugin = event.getOption("plugin").getAsString();

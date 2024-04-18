@@ -4,7 +4,6 @@ import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -15,7 +14,7 @@ public class CommandActivity extends CommandBase {
 
     public CommandActivity(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Activity", "Set the activity of the bot");
-        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
+        createCommand(command -> command
             .addOptions(new OptionData(OptionType.INTEGER, "activity", "Which activity to use", true)
                 .addChoice("playing", 0)
                 .addChoice("streaming", 1)
@@ -24,15 +23,12 @@ public class CommandActivity extends CommandBase {
                 .addChoice("custom", 4)
                 .addChoice("competing", 5))
             .addOption(OptionType.STRING, "what", "What to play", true)
-            .addOption(OptionType.STRING, "stream", "Link if streaming")
-            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-            .queue();
+            .addOption(OptionType.STRING, "stream", "Link if streaming"));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equalsIgnoreCase("activity")) return;
+    public void onCommand(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
 
         int ac = event.getOption("activity").getAsInt();

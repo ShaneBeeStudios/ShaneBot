@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.List;
@@ -14,16 +13,13 @@ public class CommandPurge extends CommandBase {
 
     public CommandPurge(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Purge", "Purge messages in a channel");
-        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-            .addOption(OptionType.INTEGER, "amount", "Amount of messages of messages to purge.", true)
-            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-            .queue();
+        createCommand(command -> command
+            .addOption(OptionType.INTEGER, "amount", "Amount of messages of messages to purge.", true));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equals("purge")) return;
+    public void onCommand(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).complete();
 
         int amount = event.getOption("amount").getAsInt();

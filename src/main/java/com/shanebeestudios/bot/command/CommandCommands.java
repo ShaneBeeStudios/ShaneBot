@@ -15,14 +15,11 @@ public class CommandCommands extends CommandBase {
 
     public CommandCommands(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Commands", "See a list of all commands");
-        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-            .queue();
+        createCommand();
     }
 
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equalsIgnoreCase("commands")) return;
+    public void onCommand(SlashCommandInteractionEvent event) {
         Member member = event.getMember();
         if (member == null) return;
 

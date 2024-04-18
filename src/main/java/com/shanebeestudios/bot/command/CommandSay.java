@@ -3,23 +3,19 @@ package com.shanebeestudios.bot.command;
 import com.shanebeestudios.bot.BotHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public class CommandSay extends CommandBase {
 
     public CommandSay(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Say", "Make the bot send a message");
-        botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-            .addOption(OptionType.STRING, "message", "Message to send", true)
-            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-            .queue();
+        createCommand(command -> command
+            .addOption(OptionType.STRING, "message", "Message to send", true));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (!event.getName().equalsIgnoreCase("say")) return;
+    public void onCommand(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
         String message = event.getOption("message").getAsString();
         event.getChannel().sendMessage(message).complete();
