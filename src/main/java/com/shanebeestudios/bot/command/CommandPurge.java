@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-import java.util.EnumSet;
 import java.util.List;
 
 public class CommandPurge extends CommandBase {
@@ -16,9 +15,9 @@ public class CommandPurge extends CommandBase {
     public CommandPurge(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Purge", "Purge messages in a channel");
         botHandler.getGuild().upsertCommand(getCommandName(), getDescription())
-                .addOption(OptionType.INTEGER, "amount", "amount of messages", true)
-                .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
-                .queue();
+            .addOption(OptionType.INTEGER, "amount", "Amount of messages of messages to purge.", true)
+            .setDefaultPermissions(DefaultMemberPermissions.enabledFor(getPermission()))
+            .queue();
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -29,10 +28,10 @@ public class CommandPurge extends CommandBase {
 
         int amount = event.getOption("amount").getAsInt();
         MessageChannelUnion channel = event.getChannel();
-        List<Message> messages = channel.getHistory().retrievePast(amount + 1).complete();
+        List<Message> messages = channel.getHistory().retrievePast(amount).complete();
         channel.purgeMessages(messages);
 
-        event.getHook().deleteOriginal().queue();
+        event.getHook().editOriginal("Purged " + messages.size() + " messages").queue();
     }
 
 }
