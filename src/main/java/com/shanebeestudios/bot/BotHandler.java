@@ -7,6 +7,7 @@ import com.shanebeestudios.bot.command.CommandMute;
 import com.shanebeestudios.bot.command.CommandPurge;
 import com.shanebeestudios.bot.command.CommandRelease;
 import com.shanebeestudios.bot.command.CommandSay;
+import com.shanebeestudios.bot.command.CommandSlowmode;
 import com.shanebeestudios.bot.listeners.JoinListener;
 import com.shanebeestudios.bot.listeners.MessageListener;
 import com.shanebeestudios.bot.task.ActivityTask;
@@ -85,6 +86,7 @@ public class BotHandler {
         commands.add(new CommandPurge(this, Permission.MESSAGE_MANAGE));
         commands.add(new CommandRelease(this, Permission.ADMINISTRATOR));
         commands.add(new CommandSay(this, Permission.MESSAGE_MANAGE));
+        commands.add(new CommandSlowmode(this, Permission.MANAGE_CHANNEL));
     }
 
     /**
