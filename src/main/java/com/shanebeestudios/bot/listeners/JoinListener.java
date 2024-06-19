@@ -20,6 +20,7 @@ public class JoinListener extends ListenerAdapter {
             if (channel != null) {
                 channel.asTextChannel().sendMessage("**You are not authorized to use this bot!!!**").queue();
             }
+            event.getGuild().kick(BotHandler.getInstance().getBot().getSelfUser()).queue();
         }
     }
 
