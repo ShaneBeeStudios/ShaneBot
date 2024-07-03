@@ -17,9 +17,6 @@ def jdaVersion = '5.0.0-beta.24'
 
 repositories {
     mavenCentral()
-
-    // jcenter
-    maven { url 'https://jcenter.bintray.com' }
 }
 
 dependencies {
