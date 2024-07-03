@@ -56,8 +56,8 @@ public class Logger {
         Thread thread = Thread.currentThread();
         String n = thread.getName();
         BotHandler instance = BotHandler.getInstance();
-        if (instance != null && (n.contains("JDA MainWS") || n.contains("main") || n.contains("Bot Loading"))) {
-            thread.setName(instance.getBotName());
+        if (instance != null && (n.contains("JDA MainWS") || n.contains("main") || n.contains("Bot Loading") || n.contains("ForkJoinPool"))) {
+            return instance.getBotName();
         }
         return thread.getName();
     }
