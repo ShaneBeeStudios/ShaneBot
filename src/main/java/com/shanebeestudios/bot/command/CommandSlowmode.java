@@ -45,25 +45,21 @@ public class CommandSlowmode extends CommandBase {
         if (channel instanceof ISlowmodeChannel textChannel) {
             int seconds = (int) timeUnit.toSeconds(time);
             String message;
-            String log;
             if (seconds <= 0) {
                 seconds = 0;
-                message = "Slowmode **disabled**";
-                log = "Slowmode <red>disabled<reset>";
+                message = "Slowmode <red>disabled<reset>";
             } else if (seconds > ISlowmodeChannel.MAX_SLOWMODE) {
                 seconds = ISlowmodeChannel.MAX_SLOWMODE;
-                message = "Slowmode set to **6 hours**";
-                log = "Slowmode set to <cyan>6 hours<reset>";
+                message = "Slowmode set to <cyan>6 hours<reset>";
             } else {
                 String timeSpan = time + " " + timeUnit.toString().toLowerCase(Locale.ROOT);
-                message = "Slowmode set to **" + timeSpan + "**";
-                log = "Slowmode set to <cyan>" + timeSpan + "<reset>";
+                message = "Slowmode set to <cyan>" + timeSpan + "<reset>";
             }
-            message += " in **" + textChannel.getName() + "**";
-            log += " in <purple>" + textChannel.getName() + "<reset>";
+            message += " in <purple>" + textChannel.getName() + "<reset>";
 
-            String finalMessage = message;
-            Logger.info(log);
+            Logger.info(message);
+
+            String finalMessage = message.replaceAll("<\\w+>", "**");
             textChannel.getManager().setSlowmode(seconds).queue(
                 success -> event.getHook().editOriginal(finalMessage).queue(),
                 fail -> event.getHook().editOriginal("Failed").queue());
