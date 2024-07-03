@@ -35,7 +35,6 @@ public class CommandSlowmode extends CommandBase {
         int time = event.getOption("time").getAsInt();
         OptionMapping timeOption = event.getOption("timeunit");
         int timeU = timeOption != null ? timeOption.getAsInt() : 0;
-        Logger.info("TimeU: " + timeU);
 
         TimeUnit timeUnit = switch (timeU) {
             case 1 -> TimeUnit.MINUTES;
@@ -46,18 +45,25 @@ public class CommandSlowmode extends CommandBase {
         if (channel instanceof ISlowmodeChannel textChannel) {
             int seconds = (int) timeUnit.toSeconds(time);
             String message;
+            String log;
             if (seconds <= 0) {
                 seconds = 0;
                 message = "Slowmode **disabled**";
+                log = "Slowmode <red>disabled<reset>";
             } else if (seconds > ISlowmodeChannel.MAX_SLOWMODE) {
                 seconds = ISlowmodeChannel.MAX_SLOWMODE;
                 message = "Slowmode set to **6 hours**";
+                log = "Slowmode set to <cyan>6 hours<reset>";
             } else {
-                message = "Slowmode set to **" + time + " " + timeUnit.toString().toLowerCase(Locale.ROOT) + "**";
+                String timeSpan = time + " " + timeUnit.toString().toLowerCase(Locale.ROOT);
+                message = "Slowmode set to **" + timeSpan + "**";
+                log = "Slowmode set to <cyan>" + timeSpan + "<reset>";
             }
             message += " in **" + textChannel.getName() + "**";
+            log += " in <purple>" + textChannel.getName() + "<reset>";
 
             String finalMessage = message;
+            Logger.info(log);
             textChannel.getManager().setSlowmode(seconds).queue(
                 success -> event.getHook().editOriginal(finalMessage).queue(),
                 fail -> event.getHook().editOriginal("Failed").queue());
