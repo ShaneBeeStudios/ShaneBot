@@ -19,6 +19,7 @@ public class ActivityTask extends TimerTask {
     private final List<Activity> generalActivities = new ArrayList<>();
     private final List<Activity> springActivities = new ArrayList<>();
     private final List<Activity> summerActivities = new ArrayList<>();
+    private final List<Activity> fallActivities = new ArrayList<>();
     private final List<Activity> octoberActivities = new ArrayList<>();
     private final List<Activity> decemberActivities = new ArrayList<>();
     private final List<Activity> currentActivities = new ArrayList<>();
@@ -29,8 +30,6 @@ public class ActivityTask extends TimerTask {
     public ActivityTask(BotHandler botHandler, long minutes) {
         this.bot = botHandler.getBot();
         this.random = new Random();
-        LocalDate date = LocalDate.now(Clock.systemDefaultZone());
-        this.currentMonth = date.getMonth();
 
         // General Activities
         this.generalActivities.add(Activity.competing("a poker tournament"));
@@ -45,7 +44,6 @@ public class ActivityTask extends TimerTask {
         this.generalActivities.add(Activity.playing("with fire"));
         this.generalActivities.add(Activity.watching("reruns of Friends"));
         this.generalActivities.add(Activity.watching("that new show everyone is talkin about"));
-        this.currentActivities.addAll(this.generalActivities);
 
         // Special Monthly Activities
         // Spring Activities
@@ -56,7 +54,6 @@ public class ActivityTask extends TimerTask {
         this.springActivities.add(Activity.customStatus("Feeding the ducks"));
         this.springActivities.add(Activity.customStatus("Riding my bike"));
         this.springActivities.add(Activity.playing("catch"));
-        if (this.currentMonth == Month.APRIL) this.currentActivities.addAll(this.springActivities);
 
         // Summer Activities
         this.summerActivities.add(Activity.competing("the Summer Olympics"));
@@ -64,18 +61,26 @@ public class ActivityTask extends TimerTask {
         this.summerActivities.add(Activity.customStatus("Laying by the pool"));
         this.summerActivities.add(Activity.customStatus("Building a sandcastle at the beach"));
         this.summerActivities.add(Activity.playing("at the beach"));
-        if (this.currentMonth == Month.JULY || this.currentMonth == Month.AUGUST) this.currentActivities.addAll(this.summerActivities);
+
+        // Fall Activities
+        this.fallActivities.add(Activity.customStatus("Apple picking"));
+        this.fallActivities.add(Activity.customStatus("Attending a fall festival"));
+        this.fallActivities.add(Activity.customStatus("Going camping."));
+        this.fallActivities.add(Activity.customStatus("Having a bonfire"));
+        this.fallActivities.add(Activity.customStatus("Laying in a meadow"));
+        this.fallActivities.add(Activity.customStatus("Raking up the leaves"));
+        this.fallActivities.add(Activity.customStatus("Visiting a farmers market"));
+        this.fallActivities.add(Activity.playing("outside in the leaves"));
 
         // October Activities
         this.octoberActivities.add(Activity.competing("a costume contest"));
+        this.octoberActivities.add(Activity.competing("a costume party"));
         this.octoberActivities.add(Activity.competing("a pumpkin carving contest"));
         this.octoberActivities.add(Activity.customStatus("Carving a pumpkin"));
         this.octoberActivities.add(Activity.customStatus("Throwing pumpkins"));
         this.octoberActivities.add(Activity.customStatus("Trick or Treating"));
         this.octoberActivities.add(Activity.customStatus("Trying on costumes"));
-        this.octoberActivities.add(Activity.playing("outside in the leaves"));
         this.octoberActivities.add(Activity.watching("a scary movie"));
-        if (this.currentMonth == Month.OCTOBER) this.currentActivities.addAll(this.octoberActivities);
 
         // December Activities
         this.decemberActivities.add(Activity.competing("the Winter Olympics"));
@@ -86,7 +91,8 @@ public class ActivityTask extends TimerTask {
         this.decemberActivities.add(Activity.listening("Christmas music"));
         this.decemberActivities.add(Activity.playing("outside in the snow"));
         this.decemberActivities.add(Activity.watching("a Hallmark Christmas movie"));
-        if (this.currentMonth == Month.DECEMBER) this.currentActivities.addAll(this.decemberActivities);
+
+        this.updateMonthlyActivities(LocalDate.now(Clock.systemDefaultZone()).getMonth());
 
         this.timer = new Timer("activity timer");
         this.timer.schedule(this, 0, minutes * 60 * 1000); // Every 5 minutes
@@ -126,12 +132,15 @@ public class ActivityTask extends TimerTask {
         this.currentMonth = month;
         this.currentActivities.clear();
         this.currentActivities.addAll(this.generalActivities);
-        if (month == Month.APRIL) {
+        if (month == Month.APRIL || month == Month.MAY) {
             this.currentActivities.addAll(this.springActivities);
         } else if (month == Month.JULY || month == Month.AUGUST) {
-           this.currentActivities.addAll(this.summerActivities);
-        } else if (month == Month.OCTOBER) {
-            this.currentActivities.addAll(this.octoberActivities);
+            this.currentActivities.addAll(this.summerActivities);
+        } else if (month == Month.SEPTEMBER || month == Month.OCTOBER) {
+            this.currentActivities.addAll(this.fallActivities);
+            if (month == Month.OCTOBER) {
+                this.currentActivities.addAll(this.octoberActivities);
+            }
         } else if (month == Month.DECEMBER) {
             this.currentActivities.addAll(this.decemberActivities);
         }
