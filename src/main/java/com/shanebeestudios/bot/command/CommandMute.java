@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-
 public class CommandMute extends CommandBase {
+
     public CommandMute(BotHandler botHandler, Permission permission) {
         super(botHandler, permission, "Mute", "Mute a user with a message sent to them and the bot channel.");
         createCommand(command -> command
