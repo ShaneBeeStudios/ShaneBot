@@ -43,7 +43,7 @@ public class CommandRelease extends CommandBase {
             .setTitle("**" + plugin + " - " + version + "**")
             .setDescription(desc)
             .addField("**Download:**", link, false)
-            .setFooter(this.botHandler.getBotName(), this.botHandler.getBot().getSelfUser().getAvatarUrl())
+            .setFooter("Released by: " + event.getMember().getNickname(), event.getUser().getAvatarUrl())
             .setTimestamp(new Date(System.currentTimeMillis()).toInstant()).build();
 
         event.getChannel().sendMessageEmbeds(pluginRelease).complete();
