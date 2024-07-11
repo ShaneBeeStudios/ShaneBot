@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 
 import java.awt.*;
 import java.util.Date;
@@ -34,7 +33,7 @@ public class CommandCommands extends CommandBase {
 
         botHandler.getCommands().forEach(command -> {
             if (!(command instanceof CommandCommands) && member.hasPermission(command.getPermission())) {
-                embedBuilder.addField(command.getName(), command.getDescription(), false);
+                embedBuilder.addField(command.getName(), "-# " + command.getDescription(), false);
             }
         });
 
