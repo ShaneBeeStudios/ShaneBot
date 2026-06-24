@@ -66,6 +66,30 @@ public class BotHandler {
         this.guild = this.bot.getGuildById(serverID);
         registerCommands();
 
+        // Validate config IDs and log results at startup
+        Logger.info("--- Config Validation ---");
+        if (this.guild == null) {
+            Logger.error("Guild not found for ID: " + serverID);
+        } else {
+            Logger.info("Guild:       <green>" + this.guild.getName() + " (" + this.guild.getId() + ")");
+        }
+        TextChannel botCh = this.bot.getTextChannelById(botChannelID);
+        if (botCh == null) botCh = this.guild != null ? this.guild.getTextChannelById(botChannelID) : null;
+        if (botCh == null) {
+            Logger.error("Bot channel not found for ID: " + botChannelID);
+        } else {
+            this.botChannel = botCh;
+            Logger.info("Bot channel: <green>#" + botCh.getName() + " (" + botCh.getId() + ")");
+        }
+        Role adminR = this.bot.getRoleById(adminRoleID);
+        if (adminR == null) {
+            Logger.error("Admin role not found for ID: " + adminRoleID);
+        } else {
+            this.adminRole = adminR;
+            Logger.info("Admin role:  <green>@" + adminR.getName() + " (" + adminR.getId() + ")");
+        }
+        Logger.info("-------------------------");
+
         new ConsoleThread(this.bot.getSelfUser().getName()).start();
         this.activityTask = new ActivityTask(this, 5);
 
@@ -134,6 +158,9 @@ public class BotHandler {
     public TextChannel getBotChannel() {
         if (this.botChannel == null) {
             this.botChannel = this.bot.getTextChannelById(this.botChannelID);
+            if (this.botChannel == null) {
+                this.botChannel = this.guild.getTextChannelById(this.botChannelID);
+            }
         }
         return this.botChannel;
     }
